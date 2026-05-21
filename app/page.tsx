@@ -1,7 +1,7 @@
 import { Header } from "@/components/header";
 import { cn } from "@/lib/utils";
 import { FullWidthDivider } from "@/components/ui/landing/full-width-divider";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon, PhoneCallIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DecorIcon } from "@/components/ui/landing/decor-icon";
 import { AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -13,50 +13,45 @@ import { Footer } from "@/components/footer";
 import { FeatureSection } from "@/components/feature-section";
 import TextType from "@/components/TextType";
 
-function HeroSection() {
+export function HeroSection() {
   return (
-    <section className="flex flex-col">
-      <div className="relative flex flex-1 flex-col items-center justify-center gap-4 px-4 sm:gap-5 min-h-[calc(100svh-3rem)]">
-        {/* X Faded Borders & Shades */}
+    <section className="mx-auto w-full max-w-5xl overflow-hidden pt-16">
+      {/* Shades */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 size-full overflow-hidden"
+      >
         <div
-          aria-hidden="true"
-          className="absolute inset-0 -z-1 size-full overflow-hidden"
-        >
-          <div
-            className={cn(
-              "absolute -inset-x-20 inset-y-0 z-0 rounded-full",
-              "bg-[radial-gradient(ellipse_at_center,theme(--color-foreground/.2),transparent,transparent)]",
-              "blur-[50px]",
-            )}
-          />
-          <div className="absolute inset-y-0 left-4 w-px bg-linear-to-b from-transparent via-border to-border md:left-8" />
-          <div className="absolute inset-y-0 right-4 w-px bg-linear-to-b from-transparent via-border to-border md:right-8" />
-          <div className="absolute inset-y-0 left-8 w-px bg-linear-to-b from-transparent via-border/50 to-border/50 md:left-12" />
-          <div className="absolute inset-y-0 right-8 w-px bg-linear-to-b from-transparent via-border/50 to-border/50 md:right-12" />
-        </div>
-
+          className={cn(
+            "absolute inset-0 isolate -z-10",
+            "bg-[radial-gradient(20%_80%_at_20%_0%,--theme(--color-foreground/.1),transparent)]"
+          )}
+        />
+      </div>
+      <div className="relative z-10 flex max-w-2xl flex-col gap-5 px-4">
         <a
           className={cn(
-            "group mx-auto flex max-w-[90vw] w-fit flex-wrap items-center gap-2 rounded-sm border bg-card p-1 shadow sm:gap-3 sm:flex-nowrap",
-            "fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards transition-all delay-500 duration-500 ease-out",
+            "group flex w-fit items-center gap-3 rounded-sm border bg-card p-1 shadow-xs",
+            "fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards transition-all delay-500 duration-500 ease-out"
           )}
+          href="#link"
         >
           <div className="rounded-sm px-1 py-0.5 shadow-sm">
           </div>
           {/* <span className="text-xs">1,000+ mock tests attempted</span> */}
           <span className="text-xs">
-          <TextType
-            text={[
-              "1,000+ mock tests attempted",
-              "500+ active users"
-            ]}
-            typingSpeed={15}
-            pauseDuration={1500}
-            showCursor
-            cursorCharacter="|"
-            deletingSpeed={45}
-            cursorBlinkDuration={0.7}
-          />
+            <TextType
+              text={[
+                "1,000+ mock tests attempted",
+                "500+ active users"
+              ]}
+              typingSpeed={15}
+              pauseDuration={1500}
+              showCursor
+              cursorCharacter="|"
+              deletingSpeed={45}
+              cursorBlinkDuration={0.7}
+            />
           </span>
           <div className="rounded-sm px-1 py-0.5 shadow-sm">
           </div>
@@ -64,40 +59,65 @@ function HeroSection() {
 
         <h1
           className={cn(
-            "max-w-xs text-balance text-center text-4xl text-foreground sm:max-w-xl sm:text-5xl md:max-w-2xl md:text-6xl lg:text-7xl",
-            "fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards delay-100 duration-500 ease-out",
+            "text-balance font-medium text-4xl text-foreground leading-tight md:text-5xl",
+            "fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards delay-100 duration-500 ease-out"
           )}
         >
-          The Gap Between You and Your Goal? Let's Close It.
+          Building Digital Experiences That Drive Growth
         </h1>
 
         <p
           className={cn(
-            "max-w-xs text-center text-muted-foreground text-sm tracking-normal sm:max-w-none sm:tracking-wider sm:text-lg",
-            "fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards delay-200 duration-500 ease-out",
+            "text-muted-foreground text-sm tracking-wider sm:text-lg md:text-xl",
+            "fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards delay-200 duration-500 ease-out"
           )}
         >
-          Practice with mock tests, track your progress,{" "}
-          <br className="hidden sm:block" /> and crush your goals with
-          Placetrix.
+          We help brands scale faster through design, development <br /> and
+          strategic execution.
         </p>
 
-        <div className="fade-in slide-in-from-bottom-10 flex w-fit animate-in items-center justify-center gap-3 fill-mode-backwards pt-1 sm:pt-2 delay-300 duration-500 ease-out">
-          <Link href="/auth/sign-up">
-            <Button size="sm" className="sm:size-default">
-              Start Practicing
-              <ArrowRightIcon data-icon="inline-end" />
-            </Button>
-          </Link>
+        <div className="fade-in slide-in-from-bottom-10 flex w-fit animate-in items-center justify-center gap-3 fill-mode-backwards pt-2 delay-300 duration-500 ease-out">
+          <Button variant="outline">
+            <PhoneCallIcon data-icon="inline-start" />{" "}
+            Book a Call
+          </Button>
+          <Button>
+            Get started{" "}
+            <ArrowRightIcon data-icon="inline-end" />
+          </Button>
         </div>
       </div>
-
       <div className="relative">
-        <DecorIcon className="size-4" position="top-left" />
-        <DecorIcon className="size-4" position="top-right" />
-        <DecorIcon className="size-4" position="bottom-left" />
-        <DecorIcon className="size-4" position="bottom-right" />
-        <FullWidthDivider className="-bottom-px" />
+        <div
+          className={cn(
+            "absolute -inset-x-20 inset-y-0 -translate-y-1/3 scale-120 rounded-full",
+            "bg-[radial-gradient(ellipse_at_center,theme(--color-foreground/.1),transparent,transparent)]",
+            "blur-[50px]"
+          )}
+        />
+        <div
+          className={cn(
+            "mask-b-from-60% relative mt-8 -mr-56 overflow-hidden px-2 sm:mt-12 sm:mr-0 md:mt-20",
+            "fade-in slide-in-from-bottom-5 animate-in fill-mode-backwards delay-100 duration-1000 ease-out"
+          )}
+        >
+          <div className="relative inset-shadow-2xs inset-shadow-foreground/10 mx-auto max-w-5xl overflow-hidden rounded-lg border bg-background p-2 shadow-xl ring-1 ring-card dark:inset-shadow-foreground/20 dark:inset-shadow-xs">
+            <img
+              alt="app screen"
+              className="z-2 aspect-video rounded-lg border dark:hidden"
+              height="1080"
+              src="https://storage.efferd.com/screen/dashboard-light.webp"
+              width="1920"
+            />
+            <img
+              alt="app screen"
+              className="hidden aspect-video rounded-lg bg-background dark:block"
+              height="1080"
+              src="https://storage.efferd.com/screen/dashboard-dark.webp"
+              width="1920"
+            />
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -231,19 +251,10 @@ export default function LandingPage() {
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden supports-[overflow:clip]:overflow-clip">
       <Header />
-      <main
-        className={cn(
-          "relative mx-auto w-full max-w-4xl grow",
-          // X Borders — hidden on very small screens to avoid clipping content
-          "sm:before:absolute sm:before:-inset-y-14 sm:before:-left-px sm:before:w-px sm:before:bg-border",
-          "sm:after:absolute sm:after:-inset-y-14 sm:after:-right-px sm:after:w-px sm:after:bg-border",
-        )}
-      >
-        <HeroSection />
-        <FeatureSection />
-        <TestimonialsSection />
-        <Footer />
-      </main>
+      <HeroSection />
+      <FeatureSection />
+      <TestimonialsSection />
+      <Footer />
     </div>
   );
 }

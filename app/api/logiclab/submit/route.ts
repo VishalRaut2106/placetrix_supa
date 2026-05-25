@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const judge0Endpoint = process.env.NEXT_PUBLIC_JUDGE0_ENDPOINT
+    const judge0Endpoint = process.env.NEXT_PUBLIC_JUDGE0_ENDPOINT || "http://187.127.171.46:2358"
 
     const supabase = (await createClient()) as any
 

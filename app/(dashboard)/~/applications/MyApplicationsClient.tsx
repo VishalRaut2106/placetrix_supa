@@ -149,25 +149,23 @@ function EmptyState() {
 
 export function MyApplicationsClient({ applications }: { applications: MyJobApplication[] }) {
   return (
-    <div className="min-h-screen w-full">
+    <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
 
       {/* Page Header */}
-      <div className="px-4 pt-8 pb-0 md:px-8">
-        <div className="flex items-start justify-between gap-4">
-          <div className="space-y-0.5">
-            <h1 className="text-xl font-semibold tracking-tight">My Applications</h1>
-            <p className="text-sm text-muted-foreground">
-              {applications.length} application{applications.length !== 1 ? "s" : ""} tracked
-            </p>
-          </div>
-          <Button asChild variant="outline" size="sm">
-            <Link href="/~/jobs">Find jobs</Link>
-          </Button>
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-1.5">
+          <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">My Applications</h1>
+          <p className="text-sm text-muted-foreground">
+            {applications.length} application{applications.length !== 1 ? "s" : ""} tracked
+          </p>
         </div>
+        <Button asChild variant="outline" size="sm">
+          <Link href="/~/jobs">Find jobs</Link>
+        </Button>
       </div>
 
       {/* Content */}
-      <div className="px-4 py-6 md:px-8">
+      <div>
         {applications.length === 0 ? (
           <EmptyState />
         ) : (

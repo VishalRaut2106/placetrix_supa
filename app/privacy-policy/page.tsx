@@ -20,7 +20,6 @@ import { cn } from "@/lib/utils";
 import PlaceTrixLogo from "@/assets/placetrix.svg";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cirka } from "@/app/fonts";
 import type { UserProfile } from "@/lib/supabase/profile";
 import { getUserProfileAction } from "@/lib/supabase/profile";
 import { buildStorageUrl } from "@/lib/storage";
@@ -528,10 +527,7 @@ function PrivacyHeroSection() {
             Privacy Policy
           </p>
           <h1
-            className={cn(
-              cirka.className,
-              "text-balance text-3xl font-semibold tracking-tight md:text-5xl"
-            )}
+            className="font-cirka text-balance text-3xl font-semibold tracking-tight md:text-5xl"
           >
             Your data deserves care, not chaos.
           </h1>
@@ -584,10 +580,7 @@ function PrivacyBodySection() {
                 )}
                 <div id={section.id} className="scroll-mt-28">
                   <h2
-                    className={cn(
-                      cirka.className,
-                      "text-balance text-2xl font-semibold tracking-tight md:text-3xl"
-                    )}
+                    className="font-cirka text-balance text-2xl font-semibold tracking-tight md:text-3xl"
                   >
                     {section.title}
                   </h2>
@@ -639,10 +632,7 @@ function CTASection() {
               Need help?
             </p>
             <h2
-              className={cn(
-                cirka.className,
-                "text-balance text-3xl font-semibold tracking-tight md:text-5xl"
-              )}
+              className="font-cirka text-balance text-3xl font-semibold tracking-tight md:text-5xl"
             >
               Got privacy questions?
             </h2>

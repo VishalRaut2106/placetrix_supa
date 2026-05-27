@@ -505,30 +505,28 @@ export function PostingsClient({ postings }: Props) {
   }
 
   return (
-    <div className="min-h-screen w-full">
+    <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
       {/* Page Header */}
-      <div className="px-4 pt-8 pb-0 md:px-8">
-        <div className="flex items-center justify-between gap-4">
-          <div className="space-y-0.5">
-            <h1 className="text-xl font-semibold tracking-tight">Job Postings</h1>
-            <p className="text-sm text-muted-foreground">
-              {postings.length} posting{postings.length !== 1 ? "s" : ""} total
-              {active.length > 0 && (
-                <span className="ml-2 inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  {active.length} active
-                </span>
-              )}
-            </p>
-          </div>
-          <Button size="sm" onClick={handleCreate} className="gap-1.5 shrink-0">
-            <Plus className="h-3.5 w-3.5" />Create Posting
-          </Button>
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-1.5">
+          <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">Job Postings</h1>
+          <p className="text-sm text-muted-foreground">
+            {postings.length} posting{postings.length !== 1 ? "s" : ""} total
+            {active.length > 0 && (
+              <span className="ml-2 inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                {active.length} active
+              </span>
+            )}
+          </p>
         </div>
+        <Button size="sm" onClick={handleCreate} className="gap-1.5 shrink-0">
+          <Plus className="h-3.5 w-3.5" />Create Posting
+        </Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as Tab)}>
-        <div className="overflow-x-auto px-4 pt-5 md:px-8">
+        <div className="overflow-x-auto">
           <TabsList className="inline-flex h-9 gap-0.5 rounded-lg bg-muted p-1">
             {tabConfig.map(({ value, label, count }) => (
               <TabsTrigger key={value} value={value} className="gap-1.5 rounded-md px-3 text-xs font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm">
@@ -544,7 +542,7 @@ export function PostingsClient({ postings }: Props) {
           </TabsList>
         </div>
 
-        <div className="px-4 py-6 md:px-8">
+        <div className="mt-4">
           {tabConfig.map(({ value }) => (
             <TabsContent key={value} value={value} className="mt-0 outline-none">
               {tabPostings[value].length === 0 ? (

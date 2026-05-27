@@ -125,17 +125,15 @@ export default async function HomePage() {
       : "A few required fields are still missing.";
 
     return (
-      <div className="min-h-screen w-full">
-        <div className="px-4 pt-8 pb-0 md:px-8">
-          <div className="space-y-0.5">
-            <h1 className="text-xl font-semibold tracking-tight">Home</h1>
-            <p className="text-sm text-muted-foreground">
-              Welcome back{profile.username ? `, @${profile.username}` : ""}
-            </p>
-          </div>
+      <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
+        <div className="flex flex-col gap-1.5">
+          <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">Home</h1>
+          <p className="text-sm text-muted-foreground">
+            Welcome back{profile.username ? `, @${profile.username}` : ""}
+          </p>
         </div>
 
-        <div className="px-4 py-6 md:px-8 md:py-8 space-y-6">
+        <div className="space-y-6">
           {/* ── Profile banner ───────────────────────────────────────────── */}
           {!profileReady && (
             <div className="rounded-lg border bg-card p-4 flex items-start justify-between gap-4">
@@ -227,17 +225,15 @@ export default async function HomePage() {
       : "A few required fields are still missing.";
 
     return (
-      <div className="min-h-screen w-full">
-        <div className="px-4 pt-8 pb-0 md:px-8">
-          <div className="space-y-0.5">
-            <h1 className="text-xl font-semibold tracking-tight">Home</h1>
-            <p className="text-sm text-muted-foreground">
-              Welcome back{profile.username ? `, @${profile.username}` : ""}
-            </p>
-          </div>
+      <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
+        <div className="flex flex-col gap-1.5">
+          <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">Home</h1>
+          <p className="text-sm text-muted-foreground">
+            Welcome back{profile.username ? `, @${profile.username}` : ""}
+          </p>
         </div>
 
-        <div className="px-4 py-6 md:px-8 md:py-8 space-y-6">
+        <div className="space-y-6">
           {/* ── Profile banner ───────────────────────────────────────────── */}
           {!profileReady && (
             <div className="rounded-lg border bg-card p-4 flex items-start justify-between gap-4">
@@ -311,17 +307,15 @@ export default async function HomePage() {
     const profileReady = rp?.profile_complete === true && rp?.profile_updated === true;
 
     return (
-      <div className="min-h-screen w-full">
-        <div className="px-4 pt-8 pb-0 md:px-8">
-          <div className="space-y-0.5">
-            <h1 className="text-xl font-semibold tracking-tight">Home</h1>
-            <p className="text-sm text-muted-foreground">
-              Welcome back{profile.username ? `, @${profile.username}` : ""}
-            </p>
-          </div>
+      <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
+        <div className="flex flex-col gap-1.5">
+          <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">Home</h1>
+          <p className="text-sm text-muted-foreground">
+            Welcome back{profile.username ? `, @${profile.username}` : ""}
+          </p>
         </div>
 
-        <div className="px-4 py-6 md:px-8 md:py-8 space-y-6">
+        <div className="space-y-6">
           {!profileReady && (
             <div className="rounded-lg border bg-card p-4 flex items-start justify-between gap-4">
               <div className="space-y-0.5">

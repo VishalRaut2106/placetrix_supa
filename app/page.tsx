@@ -25,7 +25,6 @@ import TextType from "@/components/TextType";
 import PlaceTrixLogo from "@/assets/placetrix.svg";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cirka } from "@/app/fonts";
 import type { UserProfile } from "@/lib/supabase/profile";
 import { getUserProfileAction } from "@/lib/supabase/profile";
 import { buildStorageUrl } from "@/lib/storage";
@@ -519,10 +518,7 @@ function HeroSection() {
               </a>
 
               <h1
-                className={cn(
-                  cirka.className,
-                  "text-balance text-5xl font-extrabold leading-[1.06] tracking-tight md:text-7xl lg:text-8xl"
-                )}
+                className="font-cirka text-balance text-5xl font-extrabold leading-[1.06] tracking-tight md:text-7xl lg:text-8xl"
               >
                 <span className="text-zinc-950 dark:text-white">
                   The Gap Between You and Your Goal?
@@ -651,10 +647,7 @@ function FeaturesSection() {
             What you get
           </p>
           <h2
-            className={cn(
-              cirka.className,
-              "text-balance text-4xl font-semibold tracking-tight md:text-7xl"
-            )}
+            className="font-cirka text-balance text-4xl font-semibold tracking-tight md:text-7xl"
           >
             Train. Track. Triumph.
           </h2>
@@ -795,10 +788,7 @@ function TestimonialsSection() {
             Testimonials
           </p>
           <h2
-            className={cn(
-              cirka.className,
-              "text-balance text-4xl font-semibold tracking-tight md:text-7xl"
-            )}
+            className="font-cirka text-balance text-4xl font-semibold tracking-tight md:text-7xl"
           >
             Real students, real results
           </h2>
@@ -855,10 +845,7 @@ function CTASection() {
               Get started today
             </p>
             <h2
-              className={cn(
-                cirka.className,
-                "text-balance text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl"
-              )}
+              className="font-cirka text-balance text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl"
             >
               Your placement journey starts here.
             </h2>

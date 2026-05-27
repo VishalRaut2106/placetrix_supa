@@ -5,13 +5,12 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 
 export default function TestEditorLoading() {
   return (
-    <div className="min-h-screen w-full">
-      <div className="mx-auto space-y-6 px-4 py-6 md:px-6 md:py-8">
+    <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
 
         {/* ── Page Header ── */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1.5">
-            <Skeleton className="h-6 w-28" />
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+          <div className="flex flex-col gap-1.5">
+            <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground flex items-center"><Skeleton className="h-8 w-28" /></h1>
             <Skeleton className="h-4 w-64" />
           </div>
           <div className="flex items-center gap-2">
@@ -100,6 +99,5 @@ export default function TestEditorLoading() {
         </Card>
 
       </div>
-    </div>
   )
 }

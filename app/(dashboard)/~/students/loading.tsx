@@ -82,8 +82,8 @@ export default function StudentsLoading() {
   return (
     <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
       {/* Page Header */}
-      <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Students</h1>
+      <div className="flex flex-col gap-1.5">
+        <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">Students</h1>
         <div className="h-5 flex items-center">
           <Skeleton className="h-3.5 w-36" />
         </div>

@@ -307,18 +307,16 @@ export function RecruiterSettingsClient({ userProfile, initialData }: Props) {
   }
 
   return (
-    <div className="min-h-screen w-full">
+    <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
       {/* Page Header */}
-      <div className="px-4 pt-8 pb-0 md:px-8">
-        <div className="space-y-0.5">
-          <h1 className="text-xl font-semibold tracking-tight">Settings</h1>
-          <p className="text-sm text-muted-foreground">Manage your recruiter preferences and account security</p>
-        </div>
+      <div className="flex flex-col gap-1.5">
+        <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">Settings</h1>
+        <p className="text-sm text-muted-foreground">Manage your recruiter preferences and account security</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as Tab)}>
         {/* Tab Bar */}
-        <div className="overflow-x-auto px-4 pt-5 md:px-8">
+        <div className="overflow-x-auto">
           <TabsList className="inline-flex h-9 gap-0.5 rounded-lg bg-muted p-1">
             {TABS.map(({ value, label }) => (
               <TabsTrigger
@@ -332,7 +330,7 @@ export function RecruiterSettingsClient({ userProfile, initialData }: Props) {
           </TabsList>
         </div>
 
-        <div className="px-4 py-6 md:px-8 md:py-8">
+        <div className="mt-4">
 
           {/* ── SECURITY TAB ── */}
           <TabsContent value="security" className="space-y-6 mt-0">

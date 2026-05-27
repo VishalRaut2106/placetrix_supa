@@ -1334,22 +1334,18 @@ export function ResumeGeneratorClient() {
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen w-full pb-24 md:pb-20">
+    <div className="flex flex-col gap-6 px-4 py-8 md:px-8 pb-24 md:pb-20">
 
       {/* ── Page Header ── */}
-      <div className="bg-background">
-        <div className="px-4 pt-8 pb-0 md:px-8">
-          <div className="space-y-0.5">
-            <h1 className="text-xl font-semibold tracking-tight">Resume Builder</h1>
-            <p className="text-sm text-muted-foreground">
-              Build a professional, ATS-friendly resume
-            </p>
-          </div>
-        </div>
+      <div className="flex flex-col gap-1.5">
+        <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">Resume Builder</h1>
+        <p className="text-sm text-muted-foreground">
+          Build a professional, ATS-friendly resume
+        </p>
       </div>
 
       {/* ── Accordion steps ── */}
-      <div className="px-4 md:px-8 py-6 space-y-3">
+      <div className="space-y-3">
         {STEPS.map((step, idx) => {
           const isActive = activeStep === step.id
           const isDone = isStepDone(step.id, data, visitedSteps)

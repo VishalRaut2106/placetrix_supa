@@ -290,32 +290,31 @@ export function TestResultClient({ test, attempt, accountType, serverNow }: Prop
         : "text-destructive"
 
   return (
-    <div className="min-h-screen w-full bg-background pb-12">
-      <div className="mx-auto space-y-6 px-4 py-8 md:px-8 animate-in fade-in duration-500">
+    <div className="flex flex-col gap-6 px-4 py-8 md:px-8 pb-12 animate-in fade-in duration-500">
 
-        {/* ── Page Header ────────────────────────────────────────────────── */}
-        <div className="space-y-1">
-          {test.institute_name && (
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-              {test.institute_name}
-            </p>
+      {/* ── Page Header ────────────────────────────────────────────────── */}
+      <div className="flex flex-col gap-1.5">
+        {test.institute_name && (
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+            {test.institute_name}
+          </p>
+        )}
+        <div className="flex flex-wrap items-center gap-2">
+          <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">
+            {test.title}
+          </h1>
+          {isExpired && (
+            <Badge variant="secondary" className="h-5 gap-1 border bg-muted/30 px-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              <CalendarX className="h-3 w-3" />
+              Closed
+            </Badge>
           )}
-          <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-xl font-semibold leading-tight tracking-tight sm:text-2xl">
-              {test.title}
-            </h1>
-            {isExpired && (
-              <Badge variant="secondary" className="h-5 gap-1 border bg-muted/30 px-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                <CalendarX className="h-3 w-3" />
-                Closed
-              </Badge>
-            )}
-            {isLive && (
-              <Badge variant="secondary" className="h-5 gap-1 border border-emerald-200/50 bg-emerald-50 px-2 text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-400">
-                <Clock className="h-3 w-3" />
-                Live
-              </Badge>
-            )}
+          {isLive && (
+            <Badge variant="secondary" className="h-5 gap-1 border border-emerald-200/50 bg-emerald-50 px-2 text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-400">
+              <Clock className="h-3 w-3" />
+              Live
+            </Badge>
+          )}
             {isNotYetOpen && (
               <Badge variant="secondary" className="h-5 gap-1 border border-amber-200/50 bg-amber-50 px-2 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300">
                 <CalendarClock className="h-3 w-3" />
@@ -464,6 +463,5 @@ export function TestResultClient({ test, attempt, accountType, serverNow }: Prop
         )}
 
       </div>
-    </div>
   )
 }

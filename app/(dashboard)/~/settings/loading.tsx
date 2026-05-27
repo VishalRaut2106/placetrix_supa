@@ -47,24 +47,16 @@ function CardBody({ children }: { children: React.ReactNode }) {
 
 export default function SettingsLoading() {
   return (
-    <div className="min-h-screen w-full">
+    <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
 
       {/* ── Page header — matches both clients exactly ─────────────────────── */}
-      <div className="px-4 pt-8 pb-0 md:px-8">
-        <div className="space-y-0.5">
-          <Skeleton className="h-6 w-24" />
-          <Skeleton className="h-4 w-64" />
-        </div>
+      <div className="flex flex-col gap-1.5">
+        <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">Settings</h1>
+        <Skeleton className="h-4 w-64" />
       </div>
 
       {/* ── Tab bar ────────────────────────────────────────────────────────── */}
-      {/*
-        Exact mirror of both clients:
-          <div className="overflow-x-auto px-4 pt-5 md:px-8">
-            <TabsList className="inline-flex h-9 gap-0.5 rounded-lg bg-muted p-1">
-              <TabsTrigger className="... px-3 text-xs ...">
-      */}
-      <div className="overflow-x-auto px-4 pt-5 md:px-8">
+      <div className="overflow-x-auto">
         <div className="inline-flex h-9 items-center gap-0.5 rounded-lg bg-muted p-1">
           {/*
             Candidate tabs: Account | Security | Billing | Notifications | Login History | Privacy
@@ -81,7 +73,7 @@ export default function SettingsLoading() {
       </div>
 
       {/* ── Tab content ────────────────────────────────────────────────────── */}
-      <div className="px-4 py-6 md:px-8 md:py-8 space-y-6">
+      <div className="mt-4 space-y-6">
 
         {/* ── 1. Account Settings (username) ─── */}
         <Card>

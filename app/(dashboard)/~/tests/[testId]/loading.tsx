@@ -49,21 +49,20 @@ function QuestionRowSkeleton() {
 
 export default function Loading() {
   return (
-    <div className="min-h-screen w-full bg-background">
-      <div className="mx-auto space-y-6 px-4 py-8 md:px-8">
+    <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
 
-        {/* ── Page Header ───────────────────────────────────────────────── */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-          <div className="min-w-0 space-y-2">
-            <Skeleton className="h-2.5 w-24 rounded" />
-            <div className="flex flex-wrap items-center gap-2">
-              <Skeleton className="h-7 w-52 rounded" />
-              <Skeleton className="h-5 w-16 rounded-full" />
-            </div>
-            <Skeleton className="h-4 w-72 rounded" />
+      {/* ── Page Header ───────────────────────────────────────────────── */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-1.5 min-w-0">
+          <Skeleton className="h-2.5 w-24 rounded" />
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground flex items-center"><Skeleton className="h-8 w-52" /></h1>
+            <Skeleton className="h-5 w-16 rounded-full" />
           </div>
-          <Skeleton className="h-8 w-full shrink-0 rounded-lg sm:w-24" />
+          <Skeleton className="h-4 w-72 rounded" />
         </div>
+        <Skeleton className="h-8 w-full shrink-0 rounded-lg sm:w-24" />
+      </div>
 
         {/* ── Stats Bar ─────────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -154,6 +153,5 @@ export default function Loading() {
 
         </div>
       </div>
-    </div>
   )
 }

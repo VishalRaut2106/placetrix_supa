@@ -25,7 +25,6 @@ import { cn } from "@/lib/utils";
 import PlaceTrixLogo from "@/assets/placetrix.svg";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cirka } from "@/app/fonts";
 import type { UserProfile } from "@/lib/supabase/profile";
 import { getUserProfileAction } from "@/lib/supabase/profile";
 import { buildStorageUrl } from "@/lib/storage";
@@ -454,10 +453,7 @@ function HeroSection() {
                     </p>
 
                     <h1
-                        className={cn(
-                            cirka.className,
-                            "text-balance text-3xl font-semibold tracking-tight md:text-5xl"
-                        )}
+                        className="font-cirka text-balance text-3xl font-semibold tracking-tight md:text-5xl"
                     >
                         PlaceTrix is currently free for all.
                     </h1>
@@ -491,10 +487,7 @@ function CurrentPlanSection() {
                                     Current access
                                 </p>
                                 <h2
-                                    className={cn(
-                                        cirka.className,
-                                        "text-balance text-4xl font-semibold tracking-tight md:text-6xl"
-                                    )}
+                                    className="font-cirka text-balance text-4xl font-semibold tracking-tight md:text-6xl"
                                 >
                                     One plan. No cost.
                                 </h2>
@@ -527,10 +520,7 @@ function CurrentPlanSection() {
 
                                 <div className="mt-5 flex items-end gap-2">
                                     <span
-                                        className={cn(
-                                            cirka.className,
-                                            "text-5xl font-semibold tracking-tight md:text-6xl"
-                                        )}
+                                        className="font-cirka text-5xl font-semibold tracking-tight md:text-6xl"
                                     >
                                         ₹0
                                     </span>
@@ -584,10 +574,7 @@ function FuturePlansSection() {
                         Looking ahead
                     </p>
                     <h2
-                        className={cn(
-                            cirka.className,
-                            "text-balance text-4xl font-semibold tracking-tight md:text-7xl"
-                        )}
+                        className="font-cirka text-balance text-4xl font-semibold tracking-tight md:text-7xl"
                     >
                         If paid plans arrive, you&apos;ll know first
                     </h2>
@@ -651,10 +638,7 @@ function CTASection() {
                             Start now
                         </p>
                         <h2
-                            className={cn(
-                                cirka.className,
-                                "text-balance text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl"
-                            )}
+                            className="font-cirka text-balance text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl"
                         >
                             Simple access, no surprises.
                         </h2>

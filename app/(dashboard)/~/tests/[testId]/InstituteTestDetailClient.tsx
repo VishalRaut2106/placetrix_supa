@@ -1614,19 +1614,18 @@ export function InstituteTestDetailClient({
   }, [testId, refreshAttempts])
 
   return (
-    <div className="min-h-screen w-full bg-background">
-      <div className="mx-auto space-y-6 px-4 py-8 md:px-8">
+    <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
 
         {/* ── Page Header ─────────────────────────────────────────────────── */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-          <div className="space-y-1 min-w-0">
+          <div className="flex flex-col gap-1.5 min-w-0">
             {test.institute_name && (
               <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
                 {test.institute_name}
               </p>
             )}
             <div className="flex min-w-0 flex-wrap items-center gap-2">
-              <h1 className="text-xl font-semibold leading-tight tracking-tight sm:text-2xl">
+              <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">
                 {test.title}
               </h1>
               <Badge
@@ -1833,6 +1832,5 @@ export function InstituteTestDetailClient({
           </TabsContent>
         </Tabs>
       </div>
-    </div>
   )
 }

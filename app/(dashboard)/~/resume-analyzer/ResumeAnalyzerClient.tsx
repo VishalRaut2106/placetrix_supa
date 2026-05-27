@@ -277,19 +277,17 @@ export function ResumeAnalyzerClient({ initialDescription = "" }: { initialDescr
   }, [])
 
   return (
-    <div className="min-h-screen w-full">
+    <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
       {/* ── Page Header ── */}
-      <div className="px-4 pt-8 pb-0 md:px-8">
-        <div className="space-y-0.5">
-          <h1 className="text-xl font-semibold tracking-tight">Resume Analyzer</h1>
-          <p className="text-sm text-muted-foreground">
-            Upload your resume and a job description to get an AI-powered ATS evaluation with actionable feedback.
-          </p>
-        </div>
+      <div className="flex flex-col gap-1.5">
+        <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">Resume Analyzer</h1>
+        <p className="text-sm text-muted-foreground">
+          Upload your resume and a job description to get an AI-powered ATS evaluation with actionable feedback.
+        </p>
       </div>
 
       {/* ── Main Content ── */}
-      <div className="px-4 py-6 md:px-8 md:py-8">
+      <div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
 
           {/* ── Left Panel: Inputs ── */}

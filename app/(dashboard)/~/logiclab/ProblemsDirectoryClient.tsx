@@ -232,9 +232,9 @@ export function ProblemsDirectoryClient({
     <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
 
       {/* Page Header */}
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-semibold tracking-tight">LogicLab</h1>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-1.5">
+          <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">LogicLab</h1>
           <p className="text-sm text-muted-foreground">
             {counts.solved} of {counts.total} problem{counts.total !== 1 ? "s" : ""} solved
           </p>

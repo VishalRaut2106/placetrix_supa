@@ -446,23 +446,23 @@ export function InstituteTestsClient({
     <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
 
       {/* Page Header */}
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center justify-between gap-4">
-          <h1 className="text-2xl font-semibold tracking-tight">Tests</h1>
-          <Button size="sm" onClick={handleCreate} className="gap-1.5 shrink-0">
-            <Plus className="h-3.5 w-3.5" />
-            Create Test
-          </Button>
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-1.5">
+          <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">Tests</h1>
+          <p className="text-sm text-muted-foreground">
+            {tabCounts.all} test{tabCounts.all !== 1 ? "s" : ""} total
+            {tabCounts.live > 0 && (
+              <span className="ml-2 inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                {tabCounts.live} live
+              </span>
+            )}
+          </p>
         </div>
-        <p className="text-sm text-muted-foreground">
-          {tabCounts.all} test{tabCounts.all !== 1 ? "s" : ""} total
-          {tabCounts.live > 0 && (
-            <span className="ml-2 inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              {tabCounts.live} live
-            </span>
-          )}
-        </p>
+        <Button size="sm" onClick={handleCreate} className="gap-1.5 shrink-0">
+          <Plus className="h-3.5 w-3.5" />
+          Create Test
+        </Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={(v) => updateParams({ tab: v, page: 1 })}>

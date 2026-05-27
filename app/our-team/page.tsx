@@ -21,7 +21,6 @@ import { cn } from "@/lib/utils";
 import PlaceTrixLogo from "@/assets/placetrix.svg";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cirka } from "@/app/fonts";
 import type { UserProfile } from "@/lib/supabase/profile";
 import { getUserProfileAction } from "@/lib/supabase/profile";
 import { buildStorageUrl } from "@/lib/storage";
@@ -476,10 +475,7 @@ function MissionSection() {
 						</p>
 
 						<h2
-							className={cn(
-								cirka.className,
-								"mt-2 text-balance text-3xl font-semibold tracking-tight md:text-5xl"
-							)}
+							className="font-cirka mt-2 text-balance text-3xl font-semibold tracking-tight md:text-5xl"
 						>
 							Built around the real pressure students face.
 						</h2>
@@ -627,10 +623,7 @@ function TeamSection() {
 						The team
 					</p>
 					<h2
-						className={cn(
-							cirka.className,
-							"text-balance text-3xl font-semibold tracking-tight md:text-5xl"
-						)}
+						className="font-cirka text-balance text-3xl font-semibold tracking-tight md:text-5xl"
 					>
 						Small team, focused execution
 					</h2>
@@ -686,10 +679,7 @@ function CTASection() {
 							Join us
 						</p>
 						<h2
-							className={cn(
-								cirka.className,
-								"text-balance text-3xl font-semibold tracking-tight md:text-5xl"
-							)}
+							className="font-cirka text-balance text-3xl font-semibold tracking-tight md:text-5xl"
 						>
 							Start your placement preparation with confidence.
 						</h2>

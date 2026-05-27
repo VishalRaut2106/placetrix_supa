@@ -414,16 +414,14 @@ export function RecruiterProfileClient({ userProfile, initialData }: Props) {
   const editing = (s: SectionId) => editingSection === s
 
   return (
-    <div className="min-h-screen w-full">
+    <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
       {/* Page Header */}
-      <div className="px-4 pt-8 pb-0 md:px-8">
-        <div className="space-y-0.5">
-          <h1 className="text-xl font-semibold tracking-tight">My Profile</h1>
-          <p className="text-sm text-muted-foreground">Manage your recruiter and company profile details</p>
-        </div>
+      <div className="flex flex-col gap-1.5">
+        <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">My Profile</h1>
+        <p className="text-sm text-muted-foreground">Manage your recruiter and company profile details</p>
       </div>
 
-      <div className="px-4 py-6 md:px-8 md:py-8 space-y-6">
+      <div className="space-y-6">
 
         {/* Onboarding Banner */}
         {isFirstTime && !bannerDismissed && (

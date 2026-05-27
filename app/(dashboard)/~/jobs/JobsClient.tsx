@@ -266,11 +266,11 @@ export function JobsClient({ jobs, appliedJobIds }: Props) {
   }, [jobs, search])
 
   return (
-    <div className="min-h-screen w-full pb-12">
+    <div className="flex flex-col gap-6 px-4 py-8 md:px-8 pb-12">
       {/* Page Header */}
-      <div className="px-4 pt-8 pb-6 md:px-8 space-y-4">
-        <div className="space-y-0.5">
-          <h1 className="text-2xl font-bold tracking-tight">Job Board</h1>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1.5">
+          <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">Job Board</h1>
           <p className="text-sm text-muted-foreground">
             Explore {jobs.length} open positions from top companies.
           </p>
@@ -287,7 +287,7 @@ export function JobsClient({ jobs, appliedJobIds }: Props) {
         </div>
       </div>
 
-      <div className="px-4 md:px-8">
+      <div>
         {filteredJobs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center gap-3">
             <div className="h-12 w-12 rounded-xl bg-muted flex items-center justify-center">

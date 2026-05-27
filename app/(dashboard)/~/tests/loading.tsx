@@ -77,20 +77,15 @@ export default function TestsLoading() {
     <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
 
       {/* ── Page Header ──────────────────────────────────────────────────────── */}
-      {/*
-        Institute → flex justify-between: [title + subtitle] | [Create Test button]
-        Candidate → just [title + subtitle]  (no button)
-        We always render the button skeleton — harmless on candidate, correct on institute.
-      */}
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center justify-between gap-4">
-          <h1 className="text-2xl font-semibold tracking-tight">Tests</h1>
-          {/* Institute "Create Test" button */}
-          <Skeleton className="h-8 w-28 rounded-md shrink-0" />
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-1.5">
+          <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">Tests</h1>
+          <div className="h-5 flex items-center">
+            <Skeleton className="h-3.5 w-36" />
+          </div>
         </div>
-        <div className="h-5 flex items-center">
-          <Skeleton className="h-3.5 w-36" />
-        </div>
+        {/* Institute "Create Test" button */}
+        <Skeleton className="h-8 w-28 rounded-md shrink-0" />
       </div>
 
       {/* ── Search (left) + Tab Bar (right) — mirrors ~/students ──────────────── */}

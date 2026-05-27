@@ -275,41 +275,40 @@ export function CandidateTestDetailClient({ test, attempt, serverNow }: Props) {
 
   if (!isSubmitted) {
     return (
-      <div className="min-h-screen w-full bg-background">
-        <div className="mx-auto space-y-6 px-4 py-8 md:px-8">
+      <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
 
-          {/* ── Page Header ──────────────────────────────────────────────── */}
-          <div className="space-y-3">
-            {test.institute_name && (
-              <div className="flex items-center gap-2">
-                <Avatar className="h-6 w-6 border shadow-sm bg-muted">
-                  {test.institute_logo_url && (
-                    <AvatarImage
-                      src={test.institute_logo_url}
-                      alt={test.institute_name}
-                      className="object-cover"
-                    />
-                  )}
-                  <AvatarFallback className="text-[10px] font-bold text-muted-foreground">
-                    {test.institute_name[0].toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-                  {test.institute_name}
-                </p>
-              </div>
-            )}
-            <div className="space-y-1">
-              <h1 className="text-xl font-semibold leading-tight tracking-tight sm:text-2xl">
-                {test.title}
-              </h1>
-              {test.description && (
-                <p className="max-w-2xl text-sm text-muted-foreground">
-                  {test.description}
-                </p>
-              )}
+        {/* ── Page Header ──────────────────────────────────────────────── */}
+        <div className="flex flex-col gap-3">
+          {test.institute_name && (
+            <div className="flex items-center gap-2">
+              <Avatar className="h-6 w-6 border shadow-sm bg-muted">
+                {test.institute_logo_url && (
+                  <AvatarImage
+                    src={test.institute_logo_url}
+                    alt={test.institute_name}
+                    className="object-cover"
+                  />
+                )}
+                <AvatarFallback className="text-[10px] font-bold text-muted-foreground">
+                  {test.institute_name[0].toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+                {test.institute_name}
+              </p>
             </div>
+          )}
+          <div className="flex flex-col gap-1.5">
+            <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">
+              {test.title}
+            </h1>
+            {test.description && (
+              <p className="max-w-2xl text-sm text-muted-foreground">
+                {test.description}
+              </p>
+            )}
           </div>
+        </div>
 
           {/* ── Meta grid ───────────────────────────────────────────────── */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -415,7 +414,6 @@ export function CandidateTestDetailClient({ test, attempt, serverNow }: Props) {
             </div>
           )}
 
-        </div>
       </div>
     )
   }
@@ -424,41 +422,40 @@ export function CandidateTestDetailClient({ test, attempt, serverNow }: Props) {
   // ── Results view ────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen w-full bg-background">
-      <div className="mx-auto space-y-6 px-4 py-8 md:px-8 animate-in fade-in duration-500">
+    <div className="flex flex-col gap-6 px-4 py-8 md:px-8 animate-in fade-in duration-500">
 
-        {/* ── Page Header ────────────────────────────────────────────────── */}
-        <div className="space-y-3">
-          {test.institute_name && (
-            <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6 border shadow-sm bg-muted">
-                {test.institute_logo_url && (
-                  <AvatarImage
-                    src={test.institute_logo_url}
-                    alt={test.institute_name}
-                    className="object-cover"
-                  />
-                )}
-                <AvatarFallback className="text-[10px] font-bold text-muted-foreground">
-                  {test.institute_name[0].toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-                {test.institute_name}
-              </p>
-            </div>
-          )}
-          <div className="space-y-1">
-            <h1 className="text-xl font-semibold leading-tight tracking-tight sm:text-2xl">
-              {test.title}
-            </h1>
-            {test.description && (
-              <p className="max-w-2xl text-sm text-muted-foreground line-clamp-2">
-                {test.description}
-              </p>
-            )}
+      {/* ── Page Header ────────────────────────────────────────────────── */}
+      <div className="flex flex-col gap-3">
+        {test.institute_name && (
+          <div className="flex items-center gap-2">
+            <Avatar className="h-6 w-6 border shadow-sm bg-muted">
+              {test.institute_logo_url && (
+                <AvatarImage
+                  src={test.institute_logo_url}
+                  alt={test.institute_name}
+                  className="object-cover"
+                />
+              )}
+              <AvatarFallback className="text-[10px] font-bold text-muted-foreground">
+                {test.institute_name[0].toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+              {test.institute_name}
+            </p>
           </div>
+        )}
+        <div className="flex flex-col gap-1.5">
+          <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">
+            {test.title}
+          </h1>
+          {test.description && (
+            <p className="max-w-2xl text-sm text-muted-foreground line-clamp-2">
+              {test.description}
+            </p>
+          )}
         </div>
+      </div>
 
         <Card className="rounded-xl overflow-hidden border py-0">
           <CardContent className="p-0">
@@ -516,6 +513,5 @@ export function CandidateTestDetailClient({ test, attempt, serverNow }: Props) {
         </Card>
 
       </div>
-    </div>
   )
 }

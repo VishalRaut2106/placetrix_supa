@@ -36,17 +36,15 @@ function CardBody({ children }: { children: React.ReactNode }) {
 
 export default function ProfileLoading() {
   return (
-    <div className="min-h-screen w-full">
+    <div className="flex flex-col gap-6 px-4 py-8 md:px-8">
       {/* Page Header */}
-      <div className="px-4 pt-8 pb-0 md:px-8">
-        <div className="space-y-0.5">
-          <Skeleton className="h-6 w-28" />
-          <Skeleton className="h-4 w-72" />
-        </div>
+      <div className="flex flex-col gap-1.5">
+        <h1 className="text-3xl font-bold font-cirka tracking-tight text-foreground">My Profile</h1>
+        <Skeleton className="h-4 w-72" />
       </div>
 
       {/* Profile details stack */}
-      <div className="px-4 py-6 md:px-8 md:py-8 space-y-6">
+      <div className="space-y-6">
         <Card>
           <CardHead titleW="w-36" descW="w-72" />
           <CardBody>

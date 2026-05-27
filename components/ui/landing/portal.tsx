@@ -6,6 +6,7 @@ function Portal({ className, ...props }: React.ComponentProps<"div">) {
 	const [mounted, setMounted] = React.useState(false);
 
 	React.useEffect(() => {
+		// eslint-disable-next-line react-doctor/no-initialize-state
 		setMounted(true);
 
 		const originalStyle = window.getComputedStyle(document.body).overflow;

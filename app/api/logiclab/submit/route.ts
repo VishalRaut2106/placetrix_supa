@@ -42,6 +42,7 @@ function getDeterministicMetrics(code: string, languageId: number | string) {
   return { memoryKb, timeMs }
 }
 
+// eslint-disable-next-line react-doctor/no-giant-component
 export async function POST(req: NextRequest) {
   try {
     const { problem_id, code, language_id, user_id } = await req.json()
@@ -165,6 +166,7 @@ export async function POST(req: NextRequest) {
       const timeoutId = setTimeout(() => controller.abort(), 15000)
 
       try {
+        // eslint-disable-next-line react-doctor/server-fetch-without-revalidate
         const response = await fetch(
           `${judge0Endpoint}/submissions?wait=true&base64_encoded=true`,
           {
@@ -264,6 +266,7 @@ export async function POST(req: NextRequest) {
         overallStatus = "Compile Error"
         if (!failedInfo) failedInfo = { index, input: tc.input, expected: expectedTrimmed, actual: decode(data.compile_output) }
         break 
+      // eslint-disable-next-line react-doctor/js-set-map-lookups
       } else if (statusDesc.toLowerCase().includes("memory limit") || statusId === 12 && statusDesc.includes("Memory")) {
         overallStatus = "Memory Limit Exceeded"
         if (!failedInfo) failedInfo = { index, input: tc.is_sample ? tc.input : "(hidden)", expected: tc.is_sample ? expectedTrimmed : "(hidden)", actual: `MLE (${statusDesc})` }

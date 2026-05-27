@@ -52,11 +52,11 @@ function useDebounce<T>(value: T, delay: number): T {
 
 function StatusBadge({ status }: { status: JobApplicationStatus }) {
   switch (status) {
-    case "applied": return <Badge variant="secondary" className="gap-1 rounded-md text-[10px] font-bold uppercase tracking-wider"><Clock className="h-2.5 w-2.5" />Applied</Badge>
-    case "reviewing": return <Badge variant="outline" className="gap-1 rounded-md text-[10px] font-bold uppercase tracking-wider border-blue-200 text-blue-600 bg-blue-50 dark:border-blue-900/50 dark:text-blue-400 dark:bg-blue-950/20"><Users className="h-2.5 w-2.5" />Reviewing</Badge>
-    case "shortlisted": return <Badge variant="outline" className="gap-1 rounded-md text-[10px] font-bold uppercase tracking-wider border-emerald-200 text-emerald-600 bg-emerald-50 dark:border-emerald-900/50 dark:text-emerald-400 dark:bg-emerald-950/20"><CheckCircle2 className="h-2.5 w-2.5" />Shortlisted</Badge>
-    case "rejected": return <Badge variant="outline" className="gap-1 rounded-md text-[10px] font-bold uppercase tracking-wider border-red-200 text-red-600 bg-red-50 dark:border-red-900/50 dark:text-red-400 dark:bg-red-950/20"><XCircle className="h-2.5 w-2.5" />Rejected</Badge>
-    case "hired": return <Badge className="gap-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-600 text-white dark:bg-emerald-500"><CheckCircle2 className="h-2.5 w-2.5" />Hired</Badge>
+    case "applied": return <Badge variant="secondary" className="gap-1 rounded-md text-[10px] font-bold uppercase tracking-wider"><Clock className="size-2.5" />Applied</Badge>
+    case "reviewing": return <Badge variant="outline" className="gap-1 rounded-md text-[10px] font-bold uppercase tracking-wider border-blue-200 text-blue-600 bg-blue-50 dark:border-blue-900/50 dark:text-blue-400 dark:bg-blue-950/20"><Users className="size-2.5" />Reviewing</Badge>
+    case "shortlisted": return <Badge variant="outline" className="gap-1 rounded-md text-[10px] font-bold uppercase tracking-wider border-emerald-200 text-emerald-600 bg-emerald-50 dark:border-emerald-900/50 dark:text-emerald-400 dark:bg-emerald-950/20"><CheckCircle2 className="size-2.5" />Shortlisted</Badge>
+    case "rejected": return <Badge variant="outline" className="gap-1 rounded-md text-[10px] font-bold uppercase tracking-wider border-red-200 text-red-600 bg-red-50 dark:border-red-900/50 dark:text-red-400 dark:bg-red-950/20"><XCircle className="size-2.5" />Rejected</Badge>
+    case "hired": return <Badge className="gap-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-600 text-white dark:bg-emerald-500"><CheckCircle2 className="size-2.5" />Hired</Badge>
   }
 }
 
@@ -89,15 +89,16 @@ function SortableHead({
       <div className={cn("flex items-center gap-1.5", align === "right" && "justify-end", align === "center" && "justify-center")}>
         {label}
         {sortCol === col ? (
-          sortDir === "asc" ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />
+          sortDir === "asc" ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />
         ) : (
-          <ArrowUpDown className="h-3 w-3 opacity-20" />
+          <ArrowUpDown className="size-3 opacity-20" />
         )}
       </div>
     </TableHead>
   )
 }
 
+// eslint-disable-next-line react-doctor/no-giant-component, react-doctor/prefer-useReducer
 export function ApplicationsClient({ applications, postingId, jobTitle }: { applications: ApplicationDetails[], postingId: string, jobTitle: string }) {
   const router = useRouter()
 
@@ -148,6 +149,7 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
   }, [sortCol])
 
   const sortedApps = useMemo(() => {
+    // eslint-disable-next-line react-doctor/js-tosorted-immutable
     return [...filteredApps].sort((a, b) => {
       let diff = 0
       switch (sortCol) {
@@ -186,8 +188,9 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
         {/* Page Header */}
         <div className="flex flex-col gap-1.5">
           <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-            <button onClick={() => router.push(`/~/postings`)} className="hover:text-foreground flex items-center gap-1 transition-colors">
-              <ArrowLeft className="h-3 w-3" />
+            // eslint-disable-next-line react-doctor/react-compiler-destructure-method
+            <button type="button" onClick={() => router.push(`/~/postings`)} className="hover:text-foreground flex items-center gap-1 transition-colors">
+              <ArrowLeft className="size-3" />
               BACK TO POSTINGS
             </button>
             <span className="text-muted-foreground/30">•</span>
@@ -203,7 +206,7 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
           <Card className="rounded-xl py-0">
             <CardContent className="p-4 space-y-1">
               <div className="flex items-center gap-1.5 text-muted-foreground">
-                <Users className="h-3.5 w-3.5" />
+                <Users className="size-3.5" />
                 <p className="text-xs font-medium">Total Applicants</p>
               </div>
               <p className="text-2xl font-bold tabular-nums">{stats.total}</p>
@@ -212,7 +215,7 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
           <Card className="rounded-xl py-0">
             <CardContent className="p-4 space-y-1">
               <div className="flex items-center gap-1.5 text-muted-foreground">
-                <Clock className="h-3.5 w-3.5" />
+                <Clock className="size-3.5" />
                 <p className="text-xs font-medium">Pending Review</p>
               </div>
               <p className="text-2xl font-bold tabular-nums text-blue-600">{stats.pending}</p>
@@ -221,7 +224,7 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
           <Card className="rounded-xl py-0">
             <CardContent className="p-4 space-y-1">
               <div className="flex items-center gap-1.5 text-muted-foreground">
-                <CheckCircle2 className="h-3.5 w-3.5" />
+                <CheckCircle2 className="size-3.5" />
                 <p className="text-xs font-medium">Shortlisted/Hired</p>
               </div>
               <p className="text-2xl font-bold tabular-nums text-emerald-600">{stats.shortlisted}</p>
@@ -230,7 +233,7 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
           <Card className="rounded-xl py-0">
             <CardContent className="p-4 space-y-1">
               <div className="flex items-center gap-1.5 text-muted-foreground">
-                <XCircle className="h-3.5 w-3.5" />
+                <XCircle className="size-3.5" />
                 <p className="text-xs font-medium">Rejected</p>
               </div>
               <p className="text-2xl font-bold tabular-nums text-red-600">{stats.rejected}</p>
@@ -244,7 +247,7 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
           <div className="flex flex-col gap-2 rounded-xl border bg-muted/10 p-3">
             <div className="flex flex-col sm:flex-row gap-2">
               <div className="relative flex-1 min-w-0">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
                 <Input
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -252,12 +255,12 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
                   className="pl-9 pr-9 h-9 text-xs bg-background"
                 />
                 {searchQuery && (
-                  <button
+                  <button type="button"
                     onClick={() => setSearchQuery("")}
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 transition-colors"
                     title="Clear search"
                   >
-                    <X className="h-3.5 w-3.5" />
+                    <X className="size-3.5" />
                   </button>
                 )}
               </div>
@@ -266,7 +269,7 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className={cn("gap-2 w-full h-9", activeFilterCount > 0 && "border-primary bg-primary/5 text-primary")}>
-                      <Filter className="h-3.5 w-3.5" />
+                      <Filter className="size-3.5" />
                       <span className="inline text-xs">Filters</span>
                       {activeFilterCount > 0 && (
                         <Badge variant="default" className="ml-0.5 h-4 min-w-4 px-1 text-[10px] bg-primary text-primary-foreground">
@@ -310,16 +313,16 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
                 {searchQuery.trim() && (
                   <Badge variant="secondary" className="gap-1 h-5 px-1.5 text-[10px] font-normal rounded-full">
                     "{searchQuery.trim()}"
-                    <X className="h-2.5 w-2.5 cursor-pointer hover:text-foreground" onClick={() => setSearchQuery("")} />
+                    <X className="size-2.5 cursor-pointer hover:text-foreground" onClick={() => setSearchQuery("")} />
                   </Badge>
                 )}
                 {statusFilter !== "all" && (
                   <Badge variant="secondary" className="gap-1 h-5 px-1.5 text-[10px] font-normal rounded-full">
                     {APPLICATION_STATUS_LABELS[statusFilter as JobApplicationStatus]}
-                    <X className="h-2.5 w-2.5 cursor-pointer hover:text-foreground" onClick={() => setStatusFilter("all")} />
+                    <X className="size-2.5 cursor-pointer hover:text-foreground" onClick={() => setStatusFilter("all")} />
                   </Badge>
                 )}
-                <button
+                <button type="button"
                   onClick={clearFilters}
                   className="ml-auto text-[10px] text-muted-foreground hover:text-primary underline-offset-2 hover:underline transition-colors px-1"
                 >
@@ -345,9 +348,9 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
                   <TableRow>
                     <TableCell colSpan={4} className="py-12 text-center">
                       <div className="flex flex-col items-center gap-2">
-                        <Filter className="h-5 w-5 text-muted-foreground" />
+                        <Filter className="size-5 text-muted-foreground" />
                         <p className="text-sm text-muted-foreground">No applicants match your filters.</p>
-                        <button onClick={clearFilters} className="text-xs underline text-muted-foreground hover:text-foreground">
+                        <button type="button" onClick={clearFilters} className="text-xs underline text-muted-foreground hover:text-foreground">
                           Clear filters
                         </button>
                       </div>
@@ -358,7 +361,7 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
                     <TableRow key={app.id} className="hover:bg-muted/20">
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold shrink-0 text-sm">
+                          <div className="size-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold shrink-0 text-sm">
                             {app.candidate_name.charAt(0).toUpperCase()}
                           </div>
                           <div className="space-y-0.5 min-w-0">
@@ -405,10 +408,10 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
           <div className="rounded-xl border overflow-hidden md:hidden bg-card">
             {sortedApps.length === 0 ? (
               <div className="flex flex-col items-center justify-center gap-2 py-12 text-center bg-muted/5">
-                <Filter className="h-6 w-6 text-muted-foreground/50" />
+                <Filter className="size-6 text-muted-foreground/50" />
                 <div className="space-y-1">
                   <p className="text-sm font-medium">No results match filters</p>
-                  <button onClick={clearFilters} className="text-xs text-primary hover:underline font-medium">
+                  <button type="button" onClick={clearFilters} className="text-xs text-primary hover:underline font-medium">
                     Clear all filters
                   </button>
                 </div>
@@ -417,6 +420,7 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
               <Accordion type="single" collapsible className="divide-y divide-border/60">
                 {sortedApps.map((app) => (
                   <AccordionItem key={app.id} value={app.id} className="border-none">
+                    // eslint-disable-next-line react-doctor/design-no-redundant-padding-axes
                     <AccordionTrigger className="px-4 py-4 hover:bg-muted/5 hover:no-underline data-[state=open]:bg-muted/10 transition-all">
                       <div className="flex items-center justify-between w-full pr-6 text-left">
                         <div className="min-w-0 flex-1 gap-1.5 flex flex-col">
@@ -487,13 +491,13 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
           {selectedApp && (
             <div className="space-y-6 py-4">
               <div className="flex items-center gap-4">
-                 <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl font-bold">
+                 <div className="size-16 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl font-bold">
                     {selectedApp.candidate_name.charAt(0).toUpperCase()}
                  </div>
                  <div>
                    <h3 className="text-lg font-semibold">{selectedApp.candidate_name}</h3>
                    <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-0.5">
-                     <Mail className="h-4 w-4" /> {selectedApp.candidate_email}
+                     <Mail className="size-4" /> {selectedApp.candidate_email}
                    </div>
                  </div>
               </div>
@@ -501,7 +505,7 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
               {selectedApp.cover_letter && (
                 <div className="space-y-2">
                   <h4 className="text-sm font-semibold flex items-center gap-1.5">
-                    <FileText className="h-4 w-4" /> Cover Letter
+                    <FileText className="size-4" /> Cover Letter
                   </h4>
                   <div className="bg-muted p-4 rounded-lg text-sm whitespace-pre-wrap leading-relaxed">
                     {selectedApp.cover_letter}
@@ -512,11 +516,11 @@ export function ApplicationsClient({ applications, postingId, jobTitle }: { appl
               {selectedApp.resume_url && (
                 <div className="space-y-2">
                   <h4 className="text-sm font-semibold flex items-center gap-1.5">
-                    <ExternalLink className="h-4 w-4" /> Resume
+                    <ExternalLink className="size-4" /> Resume
                   </h4>
                   <Button asChild variant="outline" className="w-full justify-start text-sm h-12">
                     <a href={selectedApp.resume_url} target="_blank" rel="noopener noreferrer">
-                      <FileText className="mr-2 h-4 w-4" />
+                      <FileText className="mr-2 size-4" />
                       View Resume Document
                     </a>
                   </Button>

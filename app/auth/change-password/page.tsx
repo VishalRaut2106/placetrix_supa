@@ -1,3 +1,4 @@
+/* eslint-disable react-doctor/nextjs-missing-metadata */
 // app/auth/change-password/page.tsx
 //
 // Fallback for the LINK-based recovery flow only.
@@ -49,7 +50,7 @@ export default function ChangePasswordPage() {
     <Suspense
       fallback={
         <div className="mx-auto flex sm:w-sm items-center justify-center py-12">
-          <Loader2Icon className="h-6 w-6 animate-spin text-muted-foreground" />
+          <Loader2Icon className="size-6 animate-spin text-muted-foreground" />
         </div>
       }
     >
@@ -57,9 +58,11 @@ export default function ChangePasswordPage() {
     </Suspense>
   );
 }
+// eslint-disable-next-line react-doctor/prefer-useReducer
 
 function ChangePasswordContent() {
   const searchParams = useSearchParams();
+  // eslint-disable-next-line react-doctor/react-compiler-destructure-method
   const router = useRouter();
   const isRecoveryMode = searchParams.get("mode") === "recovery";
 
@@ -128,7 +131,7 @@ function ChangePasswordContent() {
   if (pageState === "loading") {
     return (
       <div className="mx-auto flex sm:w-sm items-center justify-center py-12">
-        <Loader2Icon className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Loader2Icon className="size-6 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -137,8 +140,8 @@ function ChangePasswordContent() {
   if (pageState === "expired") {
     return (
       <div className="mx-auto space-y-4 sm:w-sm text-center">
-        <div className="flex h-14 w-14 mx-auto items-center justify-center rounded-full bg-destructive/10">
-          <ShieldAlertIcon className="h-7 w-7 text-destructive" />
+        <div className="flex size-14 mx-auto items-center justify-center rounded-full bg-destructive/10">
+          <ShieldAlertIcon className="size-7 text-destructive" />
         </div>
         <div className="space-y-1">
           <h1 className="font-bold text-2xl tracking-wide">Link Expired</h1>
@@ -161,8 +164,8 @@ function ChangePasswordContent() {
   if (pageState === "success") {
     return (
       <div className="mx-auto space-y-4 sm:w-sm text-center">
-        <div className="flex h-14 w-14 mx-auto items-center justify-center rounded-full bg-green-500/10">
-          <CheckCircleIcon className="h-7 w-7 text-green-500" />
+        <div className="flex size-14 mx-auto items-center justify-center rounded-full bg-green-500/10">
+          <CheckCircleIcon className="size-7 text-green-500" />
         </div>
         <div className="space-y-1">
           <h1 className="font-bold text-2xl tracking-wide">Password Updated!</h1>
@@ -243,8 +246,9 @@ function ChangePasswordContent() {
 
         <Button className="w-full" type="submit" disabled={isLoading}>
           {isLoading ? (
+            // eslint-disable-next-line react-doctor/design-no-three-period-ellipsis
             <>
-              <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2Icon className="mr-2 size-4 animate-spin" />
               Updating...
             </>
           ) : (

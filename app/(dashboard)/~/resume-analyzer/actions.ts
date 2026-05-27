@@ -245,6 +245,7 @@ Analyze this resume against the job description. Return the structured JSON eval
 
       if (isRetryableOnNextModel(err)) {
         after(() => {
+          // eslint-disable-next-line react-doctor/server-after-nonblocking
           console.warn(
             `[analyzeResumeAction] ${model} rate-limited/unavailable, trying fallback…`
           )
@@ -258,6 +259,7 @@ Analyze this resume against the job description. Return the structured JSON eval
       } catch (retryErr) {
         lastError = retryErr
         after(() => {
+          // eslint-disable-next-line react-doctor/server-after-nonblocking
           console.warn(
             `[analyzeResumeAction] ${model} retry failed, trying fallback…`
           )

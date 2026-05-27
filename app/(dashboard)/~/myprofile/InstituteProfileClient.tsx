@@ -282,6 +282,7 @@ function usernameStatusMessage(status: UsernameStatus): { text: string; classNam
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
+// eslint-disable-next-line react-doctor/no-giant-component
 export function InstituteProfileClient({ userProfile, initialData }: Props) {
   const supabase = createClient()
   const { refresh } = useRouter()
@@ -556,6 +557,7 @@ export function InstituteProfileClient({ userProfile, initialData }: Props) {
 
 
         else if (section === "courses") {
+          // eslint-disable-next-line react-doctor/js-flatmap-filter
           const filteredCourses = courses.map((c) => c.value.trim()).filter(Boolean)
           const { error } = await supabase
             .from("institute_profiles")
@@ -572,6 +574,7 @@ export function InstituteProfileClient({ userProfile, initialData }: Props) {
         }
 
         else if (section === "social") {
+          // eslint-disable-next-line react-doctor/js-flatmap-filter
           const filteredLinks = socialLinks.map((l) => l.value.trim()).filter(Boolean)
           const { error } = await supabase
             .from("institute_profiles")

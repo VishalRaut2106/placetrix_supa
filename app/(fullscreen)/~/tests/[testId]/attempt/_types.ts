@@ -42,5 +42,3 @@ export interface SavedAnswer {
   question_id: string
   selected_option_ids: string[]
 }
-
-export type SyncState = "synced" | "pending" | "failed"

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { CreateTestClient } from "./_components/CreateTestClient"
+import { CreateTestClient } from "./CreateTestClient"
 import {
   saveDraftAction,
   publishTestAction,

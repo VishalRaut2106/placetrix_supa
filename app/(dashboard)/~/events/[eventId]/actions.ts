@@ -7,7 +7,24 @@
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
-import type { EventSettingsForm, InitialEventData } from "../_types"
+// --- Shared editor types ---
+export type EventType = "workshop" | "hackathon" | "webinar" | "bootcamp"
+
+export interface EventSettingsForm {
+  title: string
+  description: string
+  speaker: string
+  start_time: string
+  end_time: string
+  venue: string
+  meeting_link: string
+  event_type: EventType | ""
+}
+
+export interface InitialEventData {
+  settings: EventSettingsForm
+  status: "draft" | "published"
+}
 
 
 // ─── Guard helpers ────────────────────────────────────────────────────────────

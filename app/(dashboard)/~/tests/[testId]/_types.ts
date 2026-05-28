@@ -18,8 +18,8 @@ export type QuestionRow = Tables<"questions">
 export type OptionRow = Tables<"options">
 export type TagRow = Tables<"tags">
 export type AttemptRow = Tables<"test_attempts">
-export type AnswerRow = Tables<"attempt_answers">
 export type AttemptDetail = Views<"attempt_details">   // the view
+
 
 
 

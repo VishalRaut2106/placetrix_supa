@@ -24,7 +24,7 @@ async function assertOwner(testId: string): Promise<string> {
   const userSub = await requireAuth()
   const supabase = await createClient()
 
-  const { data: test, error } = await supabase
+  const { data: test, error } = await (supabase as any)
     .from("tests")
     .select("institute_id")
     .eq("id", testId)
@@ -45,13 +45,13 @@ export async function toggleResultsAction(testId: string): Promise<void> {
   await assertOwner(testId)
   const supabase = await createClient()
 
-  const { data: current } = await supabase
+  const { data: current } = await (supabase as any)
     .from("tests")
     .select("results_available")
     .eq("id", testId)
     .single()
 
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from("tests")
     .update({ results_available: !current?.results_available })
     .eq("id", testId)
@@ -70,7 +70,7 @@ export async function togglePublishAction(testId: string): Promise<void> {
   await assertOwner(testId)
   const supabase = await createClient()
 
-  const { data: current } = await supabase
+  const { data: current } = await (supabase as any)
     .from("tests")
     .select("status")
     .eq("id", testId)
@@ -80,7 +80,7 @@ export async function togglePublishAction(testId: string): Promise<void> {
 
   const next = current?.status === "published" ? "draft" : "published"
 
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from("tests")
     .update({ status: next })
     .eq("id", testId)
@@ -99,7 +99,7 @@ export async function deleteTestAction(testId: string): Promise<void> {
   await assertOwner(testId)
   const supabase = await createClient()
 
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from("tests")
     .delete()
     .eq("id", testId)
@@ -119,7 +119,7 @@ export async function deleteAttemptAction(testId: string, attemptId: string): Pr
   await assertOwner(testId)
   const supabase = await createClient()
 
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from("test_attempts")
     .delete()
     .eq("id", attemptId)

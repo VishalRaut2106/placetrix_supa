@@ -66,7 +66,7 @@ export default async function AttemptPage({
   // ── 3. Fetch questions + test details in parallel ───────────────────────────
   const [questions, testDetailRes] = await Promise.all([
     getTestQuestions(testId),
-    supabase
+    (supabase as any)
       .from("tests")
       .select(
         "title, description, instructions, time_limit_seconds, available_until, strict_mode, shuffle_questions, shuffle_options"

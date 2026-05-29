@@ -17,7 +17,7 @@ export default async function ResumeAnalyzerPage({
   if (job_id && typeof job_id === "string") {
     const supabase = await createClient()
     // @ts-ignore
-    const { data } = await supabase
+    const { data } = await (supabase as any)
       .from("job_postings" as any)
       .select(`
         title, 

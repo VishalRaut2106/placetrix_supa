@@ -12,7 +12,7 @@ export async function toggleStudentVerification(studentId: string, verified: boo
 
   const supabase = await createClient()
 
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from("candidate_profiles")
     .update({ institute_verified: verified })
     .eq("profile_id", studentId)

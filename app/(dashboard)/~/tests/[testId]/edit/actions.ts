@@ -72,7 +72,7 @@ async function saveTestToDb(
 ): Promise<void> {
   const supabase = await createClient()
 
-  const { error } = await supabase.rpc("save_test_v2", {
+  const { error } = await (supabase as any).rpc("save_test_v2", {
     p_test_id: testId,
     p_settings: {
       title: settings.title.trim(),
@@ -124,7 +124,7 @@ export async function loadTestAction(
   if (authUserId !== userId) throw new Error("Unauthorized")
   const supabase = await createClient()
 
-  const { data: test } = await supabase
+  const { data: test } = await (supabase as any)
     .from("tests")
     .select(`
       title, description, instructions,

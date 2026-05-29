@@ -14,9 +14,8 @@ export default async function JobsPage() {
 
   const supabase = await createClient()
 
-  // @ts-ignore
-  const { data: jobsData, error: jobsError } = await supabase
-    .from("job_postings" as any)
+  const { data: jobsData, error: jobsError } = await (supabase as any)
+    .from("job_postings")
     .select(`
       *,
       profiles!inner (
@@ -34,13 +33,12 @@ export default async function JobsPage() {
     console.error("Error fetching jobs:", jobsError)
   }
 
-  // @ts-ignore
-  const { data: applicationsData } = await supabase
-    .from("job_applications" as any)
+  const { data: applicationsData } = await (supabase as any)
+    .from("job_applications")
     .select("job_id")
     .eq("candidate_id", profile.id)
 
-  const appliedJobIds = new Set((applicationsData ?? []).map((a: any) => a.job_id))
+  const appliedJobIds = new Set<string>((applicationsData ?? []).map((a: any) => a.job_id as string))
 
   const jobs: CandidateJobPosting[] = (jobsData ?? []).map((row: any) => {
     const rpArray = row.profiles?.recruiter_profiles

@@ -14,9 +14,8 @@ export async function updateApplicationStatusAction(applicationId: string, posti
   const supabase = await createClient()
 
   // Update status (RLS ensures they own the job posting associated with this application)
-  const { error } = await supabase
-    // @ts-ignore
-    .from("job_applications" as any)
+  const { error } = await (supabase as any)
+    .from("job_applications")
     .update({ status })
     .eq("id", applicationId)
 

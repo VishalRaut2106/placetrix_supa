@@ -15,9 +15,8 @@ export default async function ApplicationsPage() {
 
   const supabase = await createClient()
 
-  const { data: apps, error } = await supabase
-    // @ts-ignore
-    .from("job_applications" as any)
+  const { data: apps, error } = await (supabase as any)
+    .from("job_applications")
     .select(`
       id,
       status,

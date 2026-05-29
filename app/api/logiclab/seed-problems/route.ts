@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     const supabase = (await createClient()) as any
 
     // Check existing to avoid duplicates
-    const { data: existing } = await supabase
+    const { data: existing } = await (supabase as any)
       .from("coding_problems")
       .select("title")
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    const { data: inserted, error } = await supabase
+    const { data: inserted, error } = await (supabase as any)
       .from("coding_problems")
       .insert(toInsert)
       .select("id, title")

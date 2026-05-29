@@ -18,13 +18,13 @@ export default async function LogicLabPage() {
   const supabase = (await createClient()) as any
 
   // Fetch all problems
-  const { data: problems, error } = await supabase
+  const { data: problems, error } = await (supabase as any)
     .from("coding_problems")
     .select("id, title, difficulty, tags, created_at")
     .order("created_at", { ascending: false })
 
   // Fetch user's submission stats (best status per problem)
-  const { data: submissions } = await supabase
+  const { data: submissions } = await (supabase as any)
     .from("coding_submissions")
     .select("problem_id, status")
     .eq("user_id", profile.id)
@@ -38,7 +38,7 @@ export default async function LogicLabPage() {
   }
 
   // Count total submissions per problem for acceptance rate
-  const { data: allSubmissions } = await supabase
+  const { data: allSubmissions } = await (supabase as any)
     .from("coding_submissions")
     .select("problem_id, status")
 
@@ -59,7 +59,7 @@ export default async function LogicLabPage() {
   }))
 
   // Fetch all submissions for the logged in user to calculate streak & calendar
-  const { data: userSubmissions } = await supabase
+  const { data: userSubmissions } = await (supabase as any)
     .from("coding_submissions")
     .select("status, created_at")
     .eq("user_id", profile.id)

@@ -351,7 +351,7 @@ export function InstituteProfileClient({ userProfile, initialData }: Props) {
     }
     dispatch({ type: "SET_FIELD", field: "usernameStatus", value: "checking" })
     usernameDebounceRef.current = setTimeout(async () => {
-      const { data, error } = await supabase.rpc("check_username_available", {
+      const { data, error } = await (supabase as any).rpc("check_username_available", {
         p_username: trimmed,
         p_user_id: userProfile.id,
       })
@@ -471,7 +471,7 @@ export function InstituteProfileClient({ userProfile, initialData }: Props) {
         if (section === "account") {
           const trimmedUsername = username.trim() || null
           if (trimmedUsername !== (userProfile.username ?? null)) {
-            const { error } = await supabase.from("profiles").update({ username: trimmedUsername }).eq("id", userProfile.id)
+            const { error } = await (supabase as any).from("profiles").update({ username: trimmedUsername }).eq("id", userProfile.id)
             if (error) {
               if (error.code === "23505") {
                 dispatch({ type: "SET_ERRORS", errors: { username: "This username is already taken." } })
@@ -504,18 +504,18 @@ export function InstituteProfileClient({ userProfile, initialData }: Props) {
             country: country || null,
             profile_updated: true,
           }
-          const { error } = await supabase
+          const { error } = await (supabase as any)
             .from("institute_profiles")
             .upsert(payload, { onConflict: "profile_id" })
           if (error) throw error
           const newDisplayName = instituteName.trim() || userProfile.display_name
-          await supabase.from("profiles").update({ display_name: newDisplayName }).eq("id", userProfile.id)
+          await (supabase as any).from("profiles").update({ display_name: newDisplayName }).eq("id", userProfile.id)
           await supabase.auth.updateUser({ data: { display_name: newDisplayName } })
           toast.success("Basic information saved!")
         }
 
         else if (section === "contact") {
-          const { error } = await supabase
+          const { error } = await (supabase as any)
             .from("institute_profiles")
             .update({
               phone_number: instPhone.trim() || null,
@@ -535,7 +535,7 @@ export function InstituteProfileClient({ userProfile, initialData }: Props) {
         }
 
         else if (section === "admin") {
-          const { error } = await supabase
+          const { error } = await (supabase as any)
             .from("institute_profiles")
             .update({
               principal_name: principalName.trim() || null,
@@ -557,7 +557,7 @@ export function InstituteProfileClient({ userProfile, initialData }: Props) {
 
         else if (section === "courses") {
           const filteredCourses = courses.map((c) => c.value.trim()).filter(Boolean)
-          const { error } = await supabase
+          const { error } = await (supabase as any)
             .from("institute_profiles")
             .update({ courses: filteredCourses, profile_updated: true })
             .eq("profile_id", userProfile.id)
@@ -573,7 +573,7 @@ export function InstituteProfileClient({ userProfile, initialData }: Props) {
 
         else if (section === "social") {
           const filteredLinks = socialLinks.map((l) => l.value.trim()).filter(Boolean)
-          const { error } = await supabase
+          const { error } = await (supabase as any)
             .from("institute_profiles")
             .update({ social_links: filteredLinks, profile_updated: true })
             .eq("profile_id", userProfile.id)
@@ -622,12 +622,12 @@ export function InstituteProfileClient({ userProfile, initialData }: Props) {
         .from("avatars")
         .upload(newPath, file, { upsert: false, contentType: file.type })
       if (uploadError) throw uploadError
-      const { error: dbError } = await supabase
+      const { error: dbError } = await (supabase as any)
         .from("institute_profiles")
         .update({ logo_path: newPath })
         .eq("profile_id", userProfile.id)
       if (dbError) throw dbError
-      await supabase.from("profiles").update({ avatar_path: newPath }).eq("id", userProfile.id)
+      await (supabase as any).from("profiles").update({ avatar_path: newPath }).eq("id", userProfile.id)
       await supabase.auth.updateUser({ data: { avatar_path: newPath } })
       storedLogoPath.current = newPath
       const newPublicUrl = getStorageUrl(supabase, "avatars", newPath)

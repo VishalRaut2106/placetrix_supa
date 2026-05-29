@@ -35,7 +35,7 @@ export default async function StudentsPage(props: {
 
   const supabase = await createClient()
 
-  let query = supabase
+  let query = (supabase as any)
     .from("candidate_profiles")
     .select(`
       profile_id,
@@ -65,7 +65,7 @@ export default async function StudentsPage(props: {
     const s = search.trim()
     
     // First, search profiles table for matching display_name or email
-    const { data: matchedProfiles } = await supabase
+    const { data: matchedProfiles } = await (supabase as any)
       .from("profiles")
       .select("id")
       .or(`display_name.ilike.%${s}%,email.ilike.%${s}%`)

@@ -1540,7 +1540,7 @@ export function InstituteTestDetailClient({
   const refreshAttempts = useCallback(async () => {
     const supabase = createClient()
 
-    const { data: raw, error } = await supabase
+    const { data: raw, error } = await (supabase as any)
       .from("view_test_results_detailed")
       .select("*")
       .eq("test_id", testId)
@@ -1550,10 +1550,10 @@ export function InstituteTestDetailClient({
 
     const freshAttempts: InstituteAttemptRow[] = raw
       .filter(
-        (a): a is any & { attempt_id: string; started_at: string } =>
+        (a: any): a is any & { attempt_id: string; started_at: string } =>
           a.attempt_id != null && a.started_at != null
       )
-      .map((a) => ({
+      .map((a: any) => ({
         id: a.attempt_id,
         student_name: a.student_name ?? null,
         student_email: a.student_email ?? null,

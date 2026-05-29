@@ -43,19 +43,19 @@ export async function startAttemptAction(testId: string): Promise<AttemptInfo> {
 
   // Fetch everything we need in a single round-trip.
   const [profileRes, testRes, existingRes, completedRes] = await Promise.all([
-    supabase
+    (supabase as any)
       .from("candidate_profiles")
       .select("institute_id, profile_complete, profile_updated")
       .eq("profile_id", userId)
       .maybeSingle(),
-    supabase
+    (supabase as any)
       .from("tests")
       .select(
         "status, institute_id, time_limit_seconds, max_attempts, available_from, available_until"
       )
       .eq("id", testId)
       .single(),
-    supabase
+    (supabase as any)
       .from("test_attempts")
       .select("id, started_at, expires_at, tab_switch_count, attempt_number")
       .eq("test_id", testId)
@@ -64,7 +64,7 @@ export async function startAttemptAction(testId: string): Promise<AttemptInfo> {
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle(),
-    supabase
+    (supabase as any)
       .from("test_attempts")
       .select("*", { count: "exact", head: true })
       .eq("test_id", testId)
@@ -127,7 +127,7 @@ export async function startAttemptAction(testId: string): Promise<AttemptInfo> {
   // The unique constraint on (test_id, student_id, attempt_number) turns a
   // concurrent duplicate INSERT into a conflict that we surface as a clear
   // error rather than silently creating two rows.
-  const { data: newAttempt, error: insertError } = await supabase
+  const { data: newAttempt, error: insertError } = await (supabase as any)
     .from("test_attempts")
     .insert({
       test_id: testId,
@@ -142,7 +142,7 @@ export async function startAttemptAction(testId: string): Promise<AttemptInfo> {
     // Unique-violation code in Postgres is "23505".  Another tab won the race;
     // fetch the winning row instead of crashing.
     if (insertError.code === "23505") {
-      const { data: racedAttempt } = await supabase
+      const { data: racedAttempt } = await (supabase as any)
         .from("test_attempts")
         .select("id, started_at, expires_at, tab_switch_count, attempt_number")
         .eq("test_id", testId)
@@ -194,7 +194,7 @@ export async function saveAnswerAction(
 ): Promise<void> {
   const { supabase } = await requireAuth()
 
-  const { error } = await supabase.rpc("save_answer", {
+  const { error } = await (supabase as any).rpc("save_answer", {
     p_attempt_id: attemptId,
     p_question_id: questionId,
     p_selected_option_ids: selectedOptionIds,
@@ -250,7 +250,7 @@ export async function submitAttemptAction(
 
   // Verify ownership before grading so a malicious caller cannot grade someone
   // else's attempt by guessing a UUID.
-  const { data: ownerCheck } = await supabase
+  const { data: ownerCheck } = await (supabase as any)
     .from("test_attempts")
     .select("id")
     .eq("id", attemptId)
@@ -262,7 +262,7 @@ export async function submitAttemptAction(
     throw new Error("Attempt not found or already submitted")
   }
 
-  const { data: result, error } = await supabase.rpc("grade_attempt_v2", {
+  const { data: result, error } = await (supabase as any).rpc("grade_attempt_v2", {
     p_attempt_id: attemptId,
     p_final_time_spent: timeSpentSeconds,
   })
@@ -304,7 +304,7 @@ export async function recordViolationAction(
   try {
     const { supabase, userId } = await requireAuth()
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from("test_attempts")
       .update({ tab_switch_count: totalCount })
       .eq("id", attemptId)

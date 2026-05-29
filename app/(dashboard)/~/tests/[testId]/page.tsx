@@ -34,12 +34,12 @@ async function fetchCandidateView(
   // 1. Fetch user's institute profile and the test with its nested data in parallel.
   // This reduces 7-8 sequential/parallel calls to just 2 master calls.
   const [profileRes, testRes] = await Promise.all([
-    supabase
+    (supabase as any)
       .from("candidate_profiles")
       .select("institute_id, profile_complete, profile_updated")
       .eq("profile_id", userId)
       .maybeSingle(),
-    supabase
+    (supabase as any)
       .from("tests")
       .select(`
         id, title, description, instructions, time_limit_seconds, 
@@ -169,7 +169,7 @@ async function fetchInstituteView(
 
   // 1. Unified Institute View Query
   // Combines core test data, questions, and baseline attempt info.
-  const { data: raw, error } = await supabase
+  const { data: raw, error } = await (supabase as any)
     .from("tests")
     .select(`
       id, title, description, instructions, time_limit_seconds, 

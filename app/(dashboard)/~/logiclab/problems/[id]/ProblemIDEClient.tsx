@@ -381,7 +381,7 @@ export function ProblemIDEClient({
     setViewingCode("")
     try {
       const supabase = createClient()
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("coding_submissions" as any)
         .select("code, language_id")
         .eq("id", sub.id)

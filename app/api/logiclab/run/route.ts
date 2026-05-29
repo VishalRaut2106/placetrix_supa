@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     if (mode === "problem" && problem_id) {
       const supabase = (await createClient()) as any
 
-      const { data: problems, error: problemError } = await supabase
+      const { data: problems, error: problemError } = await (supabase as any)
         .from("coding_problems")
         .select("driver_codes, time_limit, memory_limit, test_cases")
         .eq("id", problem_id)

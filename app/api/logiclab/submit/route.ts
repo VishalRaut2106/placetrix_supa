@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     const supabase = (await createClient()) as any
 
     // 1. Fetch problem data (driver code + time/memory limits + test cases)
-    const { data: problems, error: problemError } = await supabase
+    const { data: problems, error: problemError } = await (supabase as any)
       .from("coding_problems")
       .select("driver_codes, time_limit, memory_limit, test_cases")
       .eq("id", problem_id)
@@ -299,12 +299,12 @@ export async function POST(req: NextRequest) {
     }
 
     // Workaround for RLS UPDATE policies: Try to delete the old submission first
-    await supabase
+    await (supabase as any)
       .from("coding_submissions")
       .delete()
       .match({ user_id, problem_id, language_id })
 
-    const { data: saved, error: saveError } = await supabase
+    const { data: saved, error: saveError } = await (supabase as any)
       .from("coding_submissions")
       .insert(submission)
       .select("id")

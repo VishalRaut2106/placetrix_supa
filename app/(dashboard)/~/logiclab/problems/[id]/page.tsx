@@ -6,7 +6,7 @@ import { ProblemIDEClient } from "./ProblemIDEClient"
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = (await createClient()) as any
-  const { data } = await supabase
+  const { data } = await (supabase as any)
     .from("coding_problems")
     .select("title")
     .eq("id", id)
@@ -26,7 +26,7 @@ export default async function ProblemPage({ params }: { params: Promise<{ id: st
   const supabase = (await createClient()) as any
 
   // Fetch problem
-  const { data: problem, error } = await supabase
+  const { data: problem, error } = await (supabase as any)
     .from("coding_problems")
     .select("*")
     .eq("id", id)
@@ -55,7 +55,7 @@ export default async function ProblemPage({ params }: { params: Promise<{ id: st
   const totalTestCases = parsedTestCases.length
 
   // Fetch user's past submissions for this problem
-  const { data: submissions } = await supabase
+  const { data: submissions } = await (supabase as any)
     .from("coding_submissions")
     .select("id, status, language_id, runtime, memory, passed_count, total_count, created_at")
     .eq("problem_id", id)
@@ -64,7 +64,7 @@ export default async function ProblemPage({ params }: { params: Promise<{ id: st
     .limit(20)
 
   // Fetch all problem IDs in the same order as directory
-  const { data: allProblems } = await supabase
+  const { data: allProblems } = await (supabase as any)
     .from("coding_problems")
     .select("id")
     .order("created_at", { ascending: false })

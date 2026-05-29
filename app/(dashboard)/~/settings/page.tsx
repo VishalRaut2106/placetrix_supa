@@ -12,7 +12,7 @@ export default async function SettingsPage() {
   const supabase = await createClient()
 
   if (profile.account_type === "candidate") {
-    const { data: candidateProfile } = await supabase
+    const { data: candidateProfile } = await (supabase as any)
       .from("candidate_profiles")
       .select("*")
       .eq("profile_id", profile.id)
@@ -27,7 +27,7 @@ export default async function SettingsPage() {
   }
 
   if (profile.account_type === "institute") {
-    const { data: instituteProfile } = await supabase
+    const { data: instituteProfile } = await (supabase as any)
       .from("institute_profiles")
       .select("*")
       .eq("profile_id", profile.id)
@@ -42,7 +42,7 @@ export default async function SettingsPage() {
   }
 
   if (profile.account_type === "recruiter") {
-    const { data: recruiterProfile } = await supabase
+    const { data: recruiterProfile } = await (supabase as any)
       .from("recruiter_profiles")
       .select("*")
       .eq("profile_id", profile.id)

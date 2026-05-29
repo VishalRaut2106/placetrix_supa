@@ -20,7 +20,7 @@ async function fetchResultData(
   const supabase = await createClient()
 
   // 1. Fetch the test and the specific attempt with its answers
-  const { data: raw, error } = await supabase
+  const { data: raw, error } = await (supabase as any)
     .from("tests")
     .select(`
       id, title, description, instructions, time_limit_seconds, 

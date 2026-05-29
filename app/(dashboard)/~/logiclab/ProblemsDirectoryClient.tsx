@@ -163,7 +163,7 @@ export function ProblemsDirectoryClient({
       const supabase = createClient()
 
       // 1. Cascade delete associated submissions to prevent foreign key errors
-      const { error: subError } = await supabase
+      const { error: subError } = await (supabase as any)
         .from("coding_submissions" as any)
         .delete()
         .eq("problem_id", deletingProblemId)
@@ -171,7 +171,7 @@ export function ProblemsDirectoryClient({
       if (subError) throw new Error(subError.message)
 
       // 2. Delete the problem itself
-      const { error: probError } = await supabase
+      const { error: probError } = await (supabase as any)
         .from("coding_problems" as any)
         .delete()
         .eq("id", deletingProblemId)

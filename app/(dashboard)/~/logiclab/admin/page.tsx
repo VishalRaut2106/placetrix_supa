@@ -18,7 +18,7 @@ export default async function AdminPage() {
   const supabase = (await createClient()) as any
 
   // ── 1. Fetch all coding problems ──
-  const { data: rawProblems } = await supabase
+  const { data: rawProblems } = await (supabase as any)
     .from("coding_problems" as any)
     .select("id, title, difficulty, tags, created_at")
     .order("created_at", { ascending: false })
@@ -26,7 +26,7 @@ export default async function AdminPage() {
   const rawProblemsList: any[] = rawProblems || []
 
   // ── 2. Fetch lightweight submissions for analytics (Limit to 2000 to prevent memory exhaustion) ──
-  const { data: rawSubmissions } = await supabase
+  const { data: rawSubmissions } = await (supabase as any)
     .from("coding_submissions" as any)
     .select("id, status, language_id, problem_id, user_id, passed_count, total_count, created_at")
     .order("created_at", { ascending: false })
@@ -35,7 +35,7 @@ export default async function AdminPage() {
   const submissions: any[] = rawSubmissions || []
 
   // Fetch student profiles (limit to 500 to prevent huge payloads)
-  const { data: rawAllProfiles } = await supabase
+  const { data: rawAllProfiles } = await (supabase as any)
     .from("profiles" as any)
     .select("id, display_name, email, account_type")
     .in("account_type", ["candidate", "user", null])
@@ -51,7 +51,7 @@ export default async function AdminPage() {
   const missingUserIds = submissionUserIds.filter(uid => !profileMap[uid as string])
   
   if (missingUserIds.length > 0) {
-    const { data: missingProfiles } = await supabase
+    const { data: missingProfiles } = await (supabase as any)
       .from("profiles" as any)
       .select("id, display_name, email, account_type")
       .in("id", missingUserIds)
@@ -186,7 +186,7 @@ export default async function AdminPage() {
   }).sort((a, b) => b.solvedCount - a.solvedCount || b.attemptCount - a.attemptCount)
 
   // ── 5. Recent submissions for Live Feed (Fetch detailed logs securely) ──
-  const { data: recentDetailedSubmissions } = await supabase
+  const { data: recentDetailedSubmissions } = await (supabase as any)
     .from("coding_submissions" as any)
     .select("id, status, language_id, problem_id, user_id, passed_count, total_count, failed_test_case_info, runtime, memory, created_at")
     .order("created_at", { ascending: false })

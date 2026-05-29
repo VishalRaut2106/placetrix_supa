@@ -183,7 +183,7 @@ export function RecruiterProfileClient({ userProfile, initialData }: Props) {
     if (!USERNAME_REGEX.test(trimmed)) { setUsernameStatus("invalid"); return }
     setUsernameStatus("checking")
     usernameDebounceRef.current = setTimeout(async () => {
-      const { data, error } = await supabase.rpc("check_username_available", {
+      const { data, error } = await (supabase as any).rpc("check_username_available", {
         p_username: trimmed,
         p_user_id: userProfile.id,
       })
@@ -276,7 +276,7 @@ export function RecruiterProfileClient({ userProfile, initialData }: Props) {
         if (section === "account") {
           const trimmedUsername = username.trim() || null
           if (trimmedUsername !== (userProfile.username ?? null)) {
-            const { error } = await supabase
+            const { error } = await (supabase as any)
               .from("profiles")
               .update({ username: trimmedUsername })
               .eq("id", userProfile.id)
@@ -308,18 +308,18 @@ export function RecruiterProfileClient({ userProfile, initialData }: Props) {
             company_description: companyDescription.trim() || null,
             profile_updated: true,
           }
-          const { error } = await supabase
+          const { error } = await (supabase as any)
             .from("recruiter_profiles")
             .upsert(payload, { onConflict: "profile_id" })
           if (error) throw error
           const newDisplayName = companyName.trim() || userProfile.display_name
-          await supabase.from("profiles").update({ display_name: newDisplayName }).eq("id", userProfile.id)
+          await (supabase as any).from("profiles").update({ display_name: newDisplayName }).eq("id", userProfile.id)
           await supabase.auth.updateUser({ data: { display_name: newDisplayName } })
           toast.success("Company information saved!")
         }
 
         else if (section === "headquarters") {
-          const { error } = await supabase
+          const { error } = await (supabase as any)
             .from("recruiter_profiles")
             .update({
               headquarters_city: hqCity.trim() || null,
@@ -339,7 +339,7 @@ export function RecruiterProfileClient({ userProfile, initialData }: Props) {
         }
 
         else if (section === "recruiter") {
-          const { error } = await supabase
+          const { error } = await (supabase as any)
             .from("recruiter_profiles")
             .update({
               designation: designation.trim() || null,
@@ -387,9 +387,9 @@ export function RecruiterProfileClient({ userProfile, initialData }: Props) {
       const newPath = `recruiters/${userProfile.id}/logo/${timestamp}.${ext}`
       const { error: uploadError } = await supabase.storage.from("avatars").upload(newPath, file, { upsert: false, contentType: file.type })
       if (uploadError) throw uploadError
-      const { error: dbError } = await supabase.from("recruiter_profiles").update({ company_logo_path: newPath }).eq("profile_id", userProfile.id)
+      const { error: dbError } = await (supabase as any).from("recruiter_profiles").update({ company_logo_path: newPath }).eq("profile_id", userProfile.id)
       if (dbError) throw dbError
-      await supabase.from("profiles").update({ avatar_path: newPath }).eq("id", userProfile.id)
+      await (supabase as any).from("profiles").update({ avatar_path: newPath }).eq("id", userProfile.id)
       await supabase.auth.updateUser({ data: { avatar_path: newPath } })
       storedLogoPath.current = newPath
       const newPublicUrl = getStorageUrl(supabase, "avatars", newPath)

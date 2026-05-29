@@ -15,7 +15,7 @@ export default async function ApplicationsPage({ params }: { params: Promise<{ p
 
   // First, verify they own this posting
   // @ts-ignore
-  const { data: posting, error: postingError } = await supabase
+  const { data: posting, error: postingError } = await (supabase as any)
     .from("job_postings" as any)
     .select("title, recruiter_id")
     .eq("id", postingId)
@@ -28,7 +28,7 @@ export default async function ApplicationsPage({ params }: { params: Promise<{ p
 
   // Fetch applications
   // @ts-ignore
-  const { data: apps, error: appsError } = await supabase
+  const { data: apps, error: appsError } = await (supabase as any)
     .from("job_applications" as any)
     .select(`
       *,

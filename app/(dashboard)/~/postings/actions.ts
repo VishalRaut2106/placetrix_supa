@@ -23,9 +23,8 @@ async function assertPostingOwner(postingId: string): Promise<string> {
   const userId = await requireAuth()
   const supabase = await createClient()
 
-  const { data, error } = await supabase
-    // @ts-ignore
-    .from("job_postings" as any)
+  const { data, error } = await (supabase as any)
+    .from("job_postings")
     .select("recruiter_id")
     .eq("id", postingId)
     .single()
@@ -46,9 +45,8 @@ export async function createPostingAction(
 
   if (!form.title.trim()) throw new Error("Title is required")
 
-  const { data, error } = await supabase
-    // @ts-ignore
-    .from("job_postings" as any)
+  const { data, error } = await (supabase as any)
+    .from("job_postings")
     .insert({
       recruiter_id: userId,
       title: form.title.trim(),
@@ -84,9 +82,8 @@ export async function updatePostingAction(
 
   if (!form.title.trim()) throw new Error("Title is required")
 
-  const { error } = await supabase
-    // @ts-ignore
-    .from("job_postings" as any)
+  const { error } = await (supabase as any)
+    .from("job_postings")
     .update({
       title: form.title.trim(),
       description: form.description.trim() || null,
@@ -116,9 +113,8 @@ export async function togglePostingStatusAction(
   await assertPostingOwner(postingId)
   const supabase = await createClient()
 
-  const { error } = await supabase
-    // @ts-ignore
-    .from("job_postings" as any)
+  const { error } = await (supabase as any)
+    .from("job_postings")
     .update({ status: newStatus })
     .eq("id", postingId)
 
@@ -133,9 +129,8 @@ export async function deletePostingAction(postingId: string): Promise<void> {
   await assertPostingOwner(postingId)
   const supabase = await createClient()
 
-  const { error } = await supabase
-    // @ts-ignore
-    .from("job_postings" as any)
+  const { error } = await (supabase as any)
+    .from("job_postings")
     .delete()
     .eq("id", postingId)
 

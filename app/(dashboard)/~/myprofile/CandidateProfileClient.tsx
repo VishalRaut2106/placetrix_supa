@@ -297,7 +297,7 @@ export function CandidateProfileClient({ userProfile, initialData }: Props) {
     if (!USERNAME_REGEX.test(trimmed)) { setUsernameStatus("invalid"); return; }
     setUsernameStatus("checking");
     usernameDebounceRef.current = setTimeout(async () => {
-      const { data, error } = await supabase.rpc("check_username_available", {
+      const { data, error } = await (supabase as any).rpc("check_username_available", {
         p_username: trimmed,
         p_user_id: userProfile.id,
       });
@@ -314,14 +314,14 @@ export function CandidateProfileClient({ userProfile, initialData }: Props) {
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase
+      const { data } = await (supabase as any)
         .from("institute_profiles")
         .select("profile_id, institute_name, courses, affiliation")
         .order("institute_name");
       if (data) {
         setInstitutes(data);
         if (initialData?.institute_id) {
-          const found = data.find((i) => i.profile_id === initialData.institute_id);
+          const found = data.find((i: any) => i.profile_id === initialData.institute_id);
           if (found) {
             setInstituteName(found.institute_name);
             setAvailableCourses(found.courses ?? []);
@@ -420,12 +420,12 @@ export function CandidateProfileClient({ userProfile, initialData }: Props) {
         .from("avatars")
         .upload(newPath, file, { upsert: false, contentType: file.type });
       if (uploadError) throw uploadError;
-      const { error: dbError } = await supabase
+      const { error: dbError } = await (supabase as any)
         .from("candidate_profiles")
         .upsert({ profile_id: userProfile.id, profile_image_path: newPath }, { onConflict: "profile_id" });
       if (dbError) throw dbError;
 
-      await supabase.from("profiles").update({ avatar_path: newPath }).eq("id", userProfile.id);
+      await (supabase as any).from("profiles").update({ avatar_path: newPath }).eq("id", userProfile.id);
       await supabase.auth.updateUser({ data: { avatar_path: newPath } });
 
       storedImagePath.current = newPath;
@@ -542,7 +542,7 @@ export function CandidateProfileClient({ userProfile, initialData }: Props) {
         if (section === "account") {
           const trimmedUsername = username.trim() || null;
           if (trimmedUsername !== (userProfile.username ?? null)) {
-            const { error } = await supabase
+            const { error } = await (supabase as any)
               .from("profiles")
               .update({ username: trimmedUsername })
               .eq("id", userProfile.id);
@@ -578,20 +578,20 @@ export function CandidateProfileClient({ userProfile, initialData }: Props) {
             permanent_address: permanentAddress.trim() || null,
             profile_updated: true,
           };
-          const { error } = await supabase
+          const { error } = await (supabase as any)
             .from("candidate_profiles")
             .upsert(payload as any, { onConflict: "profile_id" });
           if (error) throw error;
 
           const newDisplayName = [firstName.trim(), lastName.trim()]
             .filter(Boolean).join(" ") || userProfile.display_name;
-          await supabase.from("profiles").update({ display_name: newDisplayName }).eq("id", userProfile.id);
+          await (supabase as any).from("profiles").update({ display_name: newDisplayName }).eq("id", userProfile.id);
           await supabase.auth.updateUser({ data: { display_name: newDisplayName, account_type: userProfile.account_type } });
           toast.success("Personal details saved!");
         }
 
         else if (section === "education") {
-          const { error } = await supabase
+          const { error } = await (supabase as any)
             .from("candidate_profiles")
             .update({
               institute_id: instituteId || null,
@@ -628,7 +628,7 @@ export function CandidateProfileClient({ userProfile, initialData }: Props) {
         }
 
         else if (section === "professional") {
-          const { error } = await supabase
+          const { error } = await (supabase as any)
             .from("candidate_profiles")
             .update({
               skills: selectedSkills.length > 0 ? selectedSkills : null,

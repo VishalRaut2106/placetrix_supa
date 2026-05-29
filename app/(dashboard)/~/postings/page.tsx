@@ -20,9 +20,8 @@ export default async function PostingsPage() {
 
   const supabase = await createClient()
 
-  const { data, error } = await supabase
-    // @ts-ignore
-    .from("job_postings" as any)
+  const { data, error } = await (supabase as any)
+    .from("job_postings")
     .select("*")
     .eq("recruiter_id", profile.id)
     .order("created_at", { ascending: false })

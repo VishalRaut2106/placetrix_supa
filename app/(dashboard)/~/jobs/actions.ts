@@ -16,9 +16,8 @@ export async function applyForJobAction(jobId: string, coverLetter?: string) {
 
   // Note: Due to RLS and UNIQUE constraint, if the user already applied, 
   // Supabase will throw a unique constraint error which we can catch.
-  const { error } = await supabase
-    // @ts-ignore
-    .from("job_applications" as any)
+  const { error } = await (supabase as any)
+    .from("job_applications")
     .insert({
       job_id: jobId,
       candidate_id: profile.id,

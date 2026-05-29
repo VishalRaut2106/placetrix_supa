@@ -313,7 +313,7 @@ export function RecruiterSettingsClient({ userProfile, initialData }: Props) {
 
       const currentId = user.session_id || null
 
-      const { data: sessionData, error } = await supabase
+      const { data: sessionData, error } = await (supabase as any)
         .from("user_sessions")
         .select("id, created_at, updated_at, not_after, ip, user_agent")
         .eq("user_id", user.sub)
@@ -336,7 +336,7 @@ export function RecruiterSettingsClient({ userProfile, initialData }: Props) {
   async function handleRevokeSession(sessionId: string) {
     dispatchSessions({ type: "REVOKE_START", sessionId })
     try {
-      const { error } = await supabase.rpc("revoke_session", { p_session_id: sessionId })
+      const { error } = await (supabase as any).rpc("revoke_session", { p_session_id: sessionId })
       if (error) throw error
       dispatchSessions({ type: "REVOKE_SUCCESS", sessionId })
       toast.success("Session revoked.")
@@ -352,7 +352,7 @@ export function RecruiterSettingsClient({ userProfile, initialData }: Props) {
     dispatchSessions({ type: "REVOKE_ALL_START" })
     try {
       const ids = others.map((s) => s.id)
-      const { error } = await supabase.rpc("revoke_sessions_batch", { p_session_ids: ids })
+      const { error } = await (supabase as any).rpc("revoke_sessions_batch", { p_session_ids: ids })
       if (error) throw error
 
       dispatchSessions({ type: "REVOKE_ALL_SUCCESS", currentSessionId })

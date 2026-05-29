@@ -444,7 +444,7 @@ export function AdminProblemCreatorClient({
 
       let result;
       if (isEdit) {
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
           .from("coding_problems")
           .update(payload)
           .eq("id", initialProblem.id)
@@ -452,7 +452,7 @@ export function AdminProblemCreatorClient({
           .single()
         result = { data, error }
       } else {
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
           .from("coding_problems")
           .insert(payload)
           .select("id")
@@ -498,7 +498,7 @@ export function AdminProblemCreatorClient({
         test_cases: p.test_cases,
       }))
 
-      const { data: insertedProblems, error: problemsError } = await supabase
+      const { data: insertedProblems, error: problemsError } = await (supabase as any)
         .from("coding_problems")
         .insert(problemInserts)
         .select("id, title")

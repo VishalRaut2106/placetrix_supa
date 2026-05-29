@@ -34,7 +34,7 @@ async function fetchCandidateTests(
   const supabase = await createClient()
 
   // 1. Resolve the candidate's institute
-  const { data: candidateProfile } = await supabase
+  const { data: candidateProfile } = await (supabase as any)
     .from("candidate_profiles")
     .select("institute_id")
     .eq("profile_id", userId)
@@ -45,14 +45,14 @@ async function fetchCandidateTests(
   }
 
   // 2. Fetch candidate's attempts to identify submitted vs in-progress tests
-  const { data: attempts } = await supabase
+  const { data: attempts } = await (supabase as any)
     .from("test_attempts")
     .select("test_id, status")
     .eq("student_id", userId)
 
   const submittedTestIds = (attempts ?? [])
-    .filter((a) => a.status === "submitted")
-    .map((a) => a.test_id)
+    .filter((a: any) => a.status === "submitted")
+    .map((a: any) => a.test_id)
 
   const searchFilter = (q: any) => {
     if (search.trim()) {
@@ -64,7 +64,7 @@ async function fetchCandidateTests(
 
   // 3. Count parallel queries for each tab matching the search term
   const allCountQuery = searchFilter(
-    supabase
+    (supabase as any)
       .from("tests")
       .select("id", { count: "exact", head: true })
       .eq("status", "published")
@@ -72,7 +72,7 @@ async function fetchCandidateTests(
   )
 
   const liveCountQuery = searchFilter(
-    supabase
+    (supabase as any)
       .from("tests")
       .select("id", { count: "exact", head: true })
       .eq("status", "published")
@@ -85,7 +85,7 @@ async function fetchCandidateTests(
   }
 
   const upcomingCountQuery = searchFilter(
-    supabase
+    (supabase as any)
       .from("tests")
       .select("id", { count: "exact", head: true })
       .eq("status", "published")
@@ -96,7 +96,7 @@ async function fetchCandidateTests(
     upcomingCountQuery.not("id", "in", `(${submittedTestIds.join(",")})`)
   }
 
-  let pastCountQuery = supabase
+  let pastCountQuery = (supabase as any)
     .from("tests")
     .select("id", { count: "exact", head: true })
     .eq("status", "published")
@@ -126,7 +126,7 @@ async function fetchCandidateTests(
   // 4. Main Paginated query
   const activeTab = ["all", "live", "upcoming", "past"].includes(tab) ? tab : "all"
 
-  let query = supabase
+  let query = (supabase as any)
     .from("tests")
     .select(
       `
@@ -249,11 +249,11 @@ async function fetchInstituteTests(
 
   // 1. Count parallel queries for each tab matching the search term
   const [countAllRes, countDraftsRes, countLiveRes, countUpcomingRes, countPastRes] = await Promise.all([
-    searchFilter(supabase.from("view_test_summary").select("*", { count: "exact", head: true }).eq("institute_id", userId)),
-    searchFilter(supabase.from("view_test_summary").select("*", { count: "exact", head: true }).eq("institute_id", userId).eq("status", "draft")),
-    searchFilter(supabase.from("view_test_summary").select("*", { count: "exact", head: true }).eq("institute_id", userId).eq("status", "published").or(`available_from.lte.${now},available_from.is.null`).or(`available_until.gt.${now},available_until.is.null`)),
-    searchFilter(supabase.from("view_test_summary").select("*", { count: "exact", head: true }).eq("institute_id", userId).eq("status", "published").gt("available_from", now)),
-    searchFilter(supabase.from("view_test_summary").select("*", { count: "exact", head: true }).eq("institute_id", userId).eq("status", "published").lt("available_until", now)),
+    searchFilter((supabase as any).from("view_test_summary").select("*", { count: "exact", head: true }).eq("institute_id", userId)),
+    searchFilter((supabase as any).from("view_test_summary").select("*", { count: "exact", head: true }).eq("institute_id", userId).eq("status", "draft")),
+    searchFilter((supabase as any).from("view_test_summary").select("*", { count: "exact", head: true }).eq("institute_id", userId).eq("status", "published").or(`available_from.lte.${now},available_from.is.null`).or(`available_until.gt.${now},available_until.is.null`)),
+    searchFilter((supabase as any).from("view_test_summary").select("*", { count: "exact", head: true }).eq("institute_id", userId).eq("status", "published").gt("available_from", now)),
+    searchFilter((supabase as any).from("view_test_summary").select("*", { count: "exact", head: true }).eq("institute_id", userId).eq("status", "published").lt("available_until", now)),
   ])
 
   const tabCounts = {
@@ -265,7 +265,7 @@ async function fetchInstituteTests(
   }
 
   // 2. Main Paginated query
-  let query = supabase
+  let query = (supabase as any)
     .from("view_test_summary")
     .select("*", { count: "exact" })
     .eq("institute_id", userId)

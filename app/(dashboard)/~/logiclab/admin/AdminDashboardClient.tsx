@@ -399,13 +399,13 @@ export function AdminDashboardClient({
     const tId = toast.loading("Permanently deleting problem and submissions...")
     try {
       const supabase = createClient()
-      const { error: subError } = await supabase
+      const { error: subError } = await (supabase as any)
         .from("coding_submissions" as any)
         .delete()
         .eq("problem_id", deletingProblemId)
       if (subError) throw new Error(subError.message)
 
-      const { error: probError } = await supabase
+      const { error: probError } = await (supabase as any)
         .from("coding_problems" as any)
         .delete()
         .eq("id", deletingProblemId)

@@ -22,7 +22,7 @@ export default async function TestEditorPage({ params }: Props) {
   if (!user) redirect("/auth/login")
 
   // ── Account-type guard (must resolve before parallel fetches) ───────────────
-  const { data: profile } = await supabase
+  const { data: profile } = await (supabase as any)
     .from("profiles")
     .select("account_type")
     .eq("id", user.sub)
@@ -34,7 +34,7 @@ export default async function TestEditorPage({ params }: Props) {
   const isNew = testId === "new"
 
   const [{ data: tags }, initialData] = await Promise.all([
-    supabase.from("tags").select("id, name").order("name"),
+    (supabase as any).from("tags").select("id, name").order("name"),
     isNew ? Promise.resolve(null) : loadTestAction(testId, user.sub as string),
   ])
 

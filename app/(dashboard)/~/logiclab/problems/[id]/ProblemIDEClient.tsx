@@ -35,6 +35,8 @@ import {
   IconLayoutBoard,
   IconLayoutSidebar,
   IconLayoutNavbar,
+  IconSearch,
+  IconFilter,
 } from "@tabler/icons-react"
 import { toast } from "sonner"
 import { createClient } from "@/lib/supabase/client"
@@ -305,6 +307,8 @@ export function ProblemIDEClient({
   const [isProblemListOpen, setIsProblemListOpen] = useState(false)
   const [problemList, setProblemList] = useState<any[]>([])
   const [searchQuery, setSearchQuery] = useState("")
+  const [statusFilter, setStatusFilter] = useState<"all" | "solved" | "unsolved">("all")
+  const [difficultyFilter, setDifficultyFilter] = useState<"all" | "easy" | "medium" | "hard">("all")
   const [isLoadingProblems, setIsLoadingProblems] = useState(false)
 
   const [ideLayout, setIdeLayout] = useState<"standard" | "split" | "vertical">("standard")
@@ -353,7 +357,26 @@ export function ProblemIDEClient({
     }
   }, [isProblemListOpen, problemList.length, userId])
 
-  const filteredProblems = problemList.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredProblems = problemList.filter(p => {
+    // Text search (Title, Number)
+    const searchStr = searchQuery.trim().toLowerCase()
+    const matchesSearch = !searchStr || 
+                          p.title.toLowerCase().includes(searchStr) || 
+                          String(p.number).includes(searchStr)
+    
+    // Status Filter
+    let matchesStatus = true
+    if (statusFilter === "solved") matchesStatus = p.isSolved
+    else if (statusFilter === "unsolved") matchesStatus = !p.isSolved
+
+    // Difficulty Filter
+    let matchesDifficulty = true
+    if (difficultyFilter === "easy") matchesDifficulty = p.difficulty === "Easy"
+    else if (difficultyFilter === "medium") matchesDifficulty = p.difficulty === "Medium"
+    else if (difficultyFilter === "hard") matchesDifficulty = p.difficulty === "Hard"
+    
+    return matchesSearch && matchesStatus && matchesDifficulty
+  })
 
   // Custom case state
   const [customInputs, setCustomInputs] = useState<string[]>(() =>
@@ -513,6 +536,11 @@ export function ProblemIDEClient({
   }
 
   const handleRunCode = async () => {
+    const currentBoilerplate = parsedBoilerplates[String(selectedLang.id)] || `// Write your ${selectedLang.name} solution here\n`
+    if (!code || code.trim() === "" || code.trim() === currentBoilerplate.trim()) {
+      toast.warning("Please write your solution before running.")
+      return
+    }
     setRunning(true)
     setRunResult(null)
     setSelectedCaseIndex(0)
@@ -555,6 +583,11 @@ export function ProblemIDEClient({
   }
 
   const handleSubmitCode = async () => {
+    const currentBoilerplate = parsedBoilerplates[String(selectedLang.id)] || `// Write your ${selectedLang.name} solution here\n`
+    if (!code || code.trim() === "" || code.trim() === currentBoilerplate.trim()) {
+      toast.warning("Please write your solution before submitting.")
+      return
+    }
     setSubmitting(true)
     setSubmitResult(null)
     setSelectedCaseIndex(0)
@@ -1679,15 +1712,39 @@ export function ProblemIDEClient({
           </div>
         </div>
         
-        <div className="p-3 border-b border-border/60 shrink-0">
-          <div className="relative">
+        <div className="p-3 border-b border-border/60 shrink-0 bg-muted/20 flex flex-col gap-2">
+          <div className="relative w-full">
+            <IconSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input 
               type="text" 
-              placeholder="Search questions" 
+              placeholder="Search by title or ID..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-muted/50 border border-border/60 rounded-md py-1.5 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all"
+              className="w-full bg-background border border-border/60 rounded-md py-1.5 pl-8 pr-3 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all shadow-sm"
             />
+          </div>
+          <div className="flex items-center gap-2">
+            <Select value={statusFilter} onValueChange={(v: any) => setStatusFilter(v)}>
+              <SelectTrigger className="flex-1 h-8 text-xs bg-background border-border/60 shadow-sm focus:ring-0 focus-visible:ring-0 focus-visible:outline-none font-medium">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent position="popper" sideOffset={4} className="z-[9999]">
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="unsolved">Unsolved</SelectItem>
+                <SelectItem value="solved">Solved</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={difficultyFilter} onValueChange={(v: any) => setDifficultyFilter(v)}>
+              <SelectTrigger className="flex-1 h-8 text-xs bg-background border-border/60 shadow-sm focus:ring-0 focus-visible:ring-0 focus-visible:outline-none font-medium">
+                <SelectValue placeholder="Difficulty" />
+              </SelectTrigger>
+              <SelectContent position="popper" sideOffset={4} className="z-[9999]">
+                <SelectItem value="all">All Levels</SelectItem>
+                <SelectItem value="easy">Easy</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="hard">Hard</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

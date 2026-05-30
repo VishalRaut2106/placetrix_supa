@@ -23,20 +23,22 @@ import { type NextRequest, NextResponse } from "next/server";
 // Each serverless instance keeps its own cache. The worst-case propagation
 // delay for a toggle is CACHE_TTL_MS (30 s).
 
-interface MaintenanceCache {
-  value: boolean;
+type SystemStatus = "online" | "maintenance" | "connection_error";
+
+interface StatusCache {
+  value: SystemStatus;
   expiresAt: number;
 }
 
-let maintenanceCache: MaintenanceCache | null = null;
+let statusCache: StatusCache | null = null;
 const CACHE_TTL_MS = 30_000; // 30 seconds
 
-async function isMaintenanceModeActive(): Promise<boolean> {
+async function getSystemStatus(): Promise<SystemStatus> {
   const now = Date.now();
 
   // Return cached value if still fresh
-  if (maintenanceCache && now < maintenanceCache.expiresAt) {
-    return maintenanceCache.value;
+  if (statusCache && now < statusCache.expiresAt) {
+    return statusCache.value;
   }
 
   try {
@@ -57,27 +59,29 @@ async function isMaintenanceModeActive(): Promise<boolean> {
 
     if (!res.ok) {
       // Supabase returned an error — the DB is unavailable or degraded.
-      // Since the whole app depends on Supabase, show the maintenance page.
-      console.error("[maintenance] Failed to fetch app_config:", res.status);
-      return true;
+      console.error("[status] Failed to fetch app_config:", res.status);
+      statusCache = { value: "connection_error", expiresAt: now + CACHE_TTL_MS };
+      return "connection_error";
     }
 
     const rows: { value: unknown }[] = await res.json();
     const active = rows[0]?.value === true;
 
-    maintenanceCache = { value: active, expiresAt: now + CACHE_TTL_MS };
-    return active;
+    const status: SystemStatus = active ? "maintenance" : "online";
+    statusCache = { value: status, expiresAt: now + CACHE_TTL_MS };
+    return status;
   } catch (err) {
-    // Network error — Supabase is unreachable. The whole app depends on it,
-    // so activate maintenance mode automatically.
-    console.error("[maintenance] Supabase unreachable, activating maintenance mode:", err);
-    return true;
+    // Network error — Supabase is unreachable.
+    console.error("[status] Supabase unreachable:", err);
+    statusCache = { value: "connection_error", expiresAt: now + CACHE_TTL_MS };
+    return "connection_error";
   }
 }
 
 // Paths that should never be intercepted by maintenance mode
 const MAINTENANCE_BYPASS_PREFIXES = [
   "/maintenance",
+  "/connection-error",
   "/_next",
   "/api/",
   "/favicon",
@@ -105,15 +109,18 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Check maintenance mode (DB-driven, cached for 30 s)
+  // 2. Check system status (DB-driven, cached for 30 s)
   const { pathname } = request.nextUrl;
 
   if (!isBypassPath(pathname)) {
-    const inMaintenance = await isMaintenanceModeActive();
+    const systemStatus = await getSystemStatus();
 
-    if (inMaintenance) {
+    if (systemStatus === "maintenance") {
       // Rewrite to /maintenance so the URL stays the same in the browser
       return NextResponse.rewrite(new URL("/maintenance", request.url));
+    } else if (systemStatus === "connection_error") {
+      // Rewrite to /connection-error so the URL stays the same in the browser
+      return NextResponse.rewrite(new URL("/connection-error", request.url));
     }
   }
 

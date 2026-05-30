@@ -1,37 +1,25 @@
 "use server";
 
-import { createServerClient } from "@supabase/ssr";
-import type { Database } from "@/types/supabase";
 import { createClient } from "@/lib/supabase/server";
-
-// We need an admin client to fetch/update tickets for guests via URL (bypassing RLS)
-function createAdminClient() {
-  return createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      cookies: {
-        getAll: () => [],
-        setAll: () => {},
-      },
-    }
-  );
-}
+import type { Database } from "@/types/supabase";
+import { SupabaseClient } from "@supabase/supabase-js";
 
 export async function createTicketAction(data: { title: string; description: string; email: string }) {
-  const supabase = await createClient();
+  const supabase = await createClient() as SupabaseClient<Database>;
   const { data: userData } = await supabase.auth.getUser();
   const userId = userData?.user?.id;
 
-  const adminSupabase = createAdminClient();
+  if (!userId) {
+    throw new Error("You must be logged in to create a ticket.");
+  }
 
-  const { data: ticket, error } = await adminSupabase
+  const { data: ticket, error } = await supabase
     .from("tickets")
     .insert({
       title: data.title,
       description: data.description,
       email: data.email,
-      user_id: userId || null,
+      user_id: userId,
       status: "open",
     })
     .select("id")
@@ -45,11 +33,17 @@ export async function createTicketAction(data: { title: string; description: str
 }
 
 export async function getTicketAction(ticketId: string) {
-  const adminSupabase = createAdminClient();
+  const supabase = await createClient() as SupabaseClient<Database>;
+  const { data: userData } = await supabase.auth.getUser();
+  const userId = userData?.user?.id;
 
-  const { data: ticket, error: ticketError } = await adminSupabase
+  if (!userId) {
+    return null;
+  }
+
+  const { data: ticket, error: ticketError } = await supabase
     .from("tickets")
-    .select("*")
+    .select("*, profiles(avatar_path)")
     .eq("id", ticketId)
     .single();
 
@@ -57,9 +51,9 @@ export async function getTicketAction(ticketId: string) {
     return null;
   }
 
-  const { data: messages, error: messagesError } = await adminSupabase
+  const { data: messages, error: messagesError } = await supabase
     .from("ticket_messages")
-    .select("*")
+    .select("*, profiles(avatar_path)")
     .eq("ticket_id", ticketId)
     .order("created_at", { ascending: true });
 
@@ -71,30 +65,41 @@ export async function getTicketAction(ticketId: string) {
 }
 
 export async function addTicketMessageAction(ticketId: string, message: string) {
-  const supabase = await createClient();
+  const supabase = await createClient() as SupabaseClient<Database>;
   const { data: userData } = await supabase.auth.getUser();
   const userId = userData?.user?.id;
 
-  const adminSupabase = createAdminClient();
+  if (!userId) {
+    throw new Error("You must be logged in to reply.");
+  }
 
-  // Verify the ticket exists
-  const { data: ticket, error: ticketError } = await adminSupabase
+  // Verify the ticket exists and user has access (RLS will enforce this as well, but this provides a better error)
+  const { data: ticket, error: ticketError } = await supabase
     .from("tickets")
     .select("id")
     .eq("id", ticketId)
     .single();
 
   if (ticketError || !ticket) {
-    throw new Error("Ticket not found");
+    throw new Error("Ticket not found or access denied.");
   }
 
-  const { error } = await adminSupabase
+  // Check if sender is an admin to determine sender_type
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("account_type")
+    .eq("id", userId)
+    .single();
+  const isAdmin = profile?.account_type === "admin";
+  const sender_type = isAdmin ? "support" : "user";
+
+  const { error } = await supabase
     .from("ticket_messages")
     .insert({
       ticket_id: ticketId,
       message,
-      sender_type: "user",
-      user_id: userId || null,
+      sender_type,
+      user_id: userId,
     });
 
   if (error) {
@@ -104,13 +109,19 @@ export async function addTicketMessageAction(ticketId: string, message: string) 
   return true;
 }
 
-export async function validateTicketAction(ticketInput: string) {
-  const adminSupabase = createAdminClient();
-  const input = ticketInput.trim();
 
+export async function validateTicketAction(ticketInput: string) {
+  const supabase = await createClient() as SupabaseClient<Database>;
+  const { data: userData } = await supabase.auth.getUser();
+  
+  if (!userData?.user?.id) {
+    throw new Error("You must be logged in to track a ticket.");
+  }
+
+  const input = ticketInput.trim();
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(input);
 
-  const query = adminSupabase.from("tickets").select("id").limit(1);
+  const query = supabase.from("tickets").select("id").limit(1);
   if (isUuid) {
     query.eq("id", input);
   } else {
@@ -120,8 +131,72 @@ export async function validateTicketAction(ticketInput: string) {
   const { data, error } = await query.single();
 
   if (error || !data) {
-    throw new Error("Invalid Ticket ID or Number. Please check and try again.");
+    throw new Error("Invalid Ticket ID or Number, or you do not have permission to view it.");
   }
 
   return data.id;
 }
+
+export async function getMyTicketsAction() {
+  const supabase = await createClient() as SupabaseClient<Database>;
+  const { data: userData } = await supabase.auth.getUser();
+  const userId = userData?.user?.id;
+
+  if (!userId) {
+    return [];
+  }
+
+  // Check if user is an admin
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("account_type")
+    .eq("id", userId)
+    .single();
+  const isAdmin = profile?.account_type === "admin";
+
+  let query = supabase.from("tickets").select("*");
+  if (!isAdmin) {
+    query = query.eq("user_id", userId);
+  }
+
+  const { data, error } = await query.order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function updateTicketStatusAction(ticketId: string, status: "open" | "in_progress" | "resolved" | "closed") {
+  const supabase = await createClient() as SupabaseClient<Database>;
+  const { data: userData } = await supabase.auth.getUser();
+  const userId = userData?.user?.id;
+
+  if (!userId) {
+    throw new Error("Not authenticated");
+  }
+
+  // Verify the user is an admin
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("account_type")
+    .eq("id", userId)
+    .single();
+
+  if (profile?.account_type !== "admin") {
+    throw new Error("Unauthorized. Only admins can update ticket status.");
+  }
+
+  const { error } = await supabase
+    .from("tickets")
+    .update({ status })
+    .eq("id", ticketId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return true;
+}
+

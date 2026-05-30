@@ -20,6 +20,13 @@ export interface Course {
   category: "Core CS" | "Web Development" | "Interview Prep" | "System Design"
   level: "Beginner" | "Intermediate" | "Advanced"
   duration: string
+  type: "Specialization" | "Professional Certificate" | "Course"
+  badge?: string
+  partner: {
+    name: string
+    logo: string
+    logoBg: string
+  }
   instructor: {
     name: string
     role: string
@@ -36,6 +43,13 @@ export const INITIAL_COURSES: Course[] = [
     category: "Core CS",
     level: "Advanced",
     duration: "24h 15m",
+    type: "Specialization",
+    badge: "Popular",
+    partner: {
+      name: "CS Foundation",
+      logo: "C",
+      logoBg: "bg-indigo-600"
+    },
     instructor: {
       name: "Dr. Evelyn Vance",
       role: "Ex-Google Staff Engineer",
@@ -92,6 +106,13 @@ export const INITIAL_COURSES: Course[] = [
     category: "Web Development",
     level: "Intermediate",
     duration: "18h 30m",
+    type: "Professional Certificate",
+    badge: "Bestseller",
+    partner: {
+      name: "Vercel & Supabase Partner",
+      logo: "S",
+      logoBg: "bg-emerald-600"
+    },
     instructor: {
       name: "Marcus Chen",
       role: "Lead Frontend Architect",
@@ -138,6 +159,13 @@ export const INITIAL_COURSES: Course[] = [
     category: "Interview Prep",
     level: "Beginner",
     duration: "6h 45m",
+    type: "Course",
+    badge: "Job Skills",
+    partner: {
+      name: "Placetrix Academy",
+      logo: "P",
+      logoBg: "bg-amber-600"
+    },
     instructor: {
       name: "Sarah Jenkins",
       role: "HR Director at Tech Corp",
@@ -182,6 +210,13 @@ export const INITIAL_COURSES: Course[] = [
     category: "System Design",
     level: "Advanced",
     duration: "14h 20m",
+    type: "Specialization",
+    badge: "Bestseller",
+    partner: {
+      name: "Scale Architect Group",
+      logo: "A",
+      logoBg: "bg-purple-600"
+    },
     instructor: {
       name: "Alex Mercer",
       role: "Principal Infrastructure Architect",
@@ -206,6 +241,131 @@ export const INITIAL_COURSES: Course[] = [
           { id: "s-l4", title: "Relational vs NoSQL Database Selection", duration: "35 min", type: "video", completed: false },
           { id: "s-l5", title: "Database Sharding and Replication", duration: "45 min", type: "article", completed: false },
           { id: "s-l6", title: "Caching Strategies: Write-Through vs Cache-Aside", duration: "30 min", type: "exercise", completed: false }
+        ]
+      }
+    ]
+  },
+  {
+    id: "google-data-analytics",
+    title: "Google Data Analytics Professional Certificate",
+    description: "Gain in-demand skills that will prepare you for an entry-level job. Learn how to process and analyze data.",
+    category: "System Design",
+    level: "Beginner",
+    duration: "32h 45m",
+    type: "Professional Certificate",
+    badge: "Job Skills",
+    partner: {
+      name: "Google",
+      logo: "G",
+      logoBg: "bg-red-500"
+    },
+    instructor: {
+      name: "Sarah Jenkins",
+      role: "Lead Google Data Analyst",
+      avatar: "G"
+    },
+    modules: [
+      {
+        id: "g1",
+        title: "Introducing Data Analytics",
+        description: "Understand the core processes of data analytics.",
+        lessons: [
+          { id: "gl1", title: "What is Data Analytics?", duration: "12 min", type: "video", completed: false },
+          { id: "gl2", title: "Making Data-Driven Decisions", duration: "18 min", type: "article", completed: false },
+          { id: "gl3", title: "Quiz: Intro to Data", duration: "15 min", type: "quiz", completed: false }
+        ]
+      }
+    ]
+  },
+  {
+    id: "foundations-data-everywhere",
+    title: "Foundations: Data, Data, Everywhere",
+    description: "This is the first course in the Google Data Analytics Professional Certificate. You will be introduced to data analytics.",
+    category: "System Design",
+    level: "Beginner",
+    duration: "8h 12m",
+    type: "Course",
+    badge: "Bestseller",
+    partner: {
+      name: "Google",
+      logo: "G",
+      logoBg: "bg-red-500"
+    },
+    instructor: {
+      name: "Marcus Chen",
+      role: "Google Course Instructor",
+      avatar: "G"
+    },
+    modules: [
+      {
+        id: "gd1",
+        title: "Data and Decisions Foundations",
+        description: "Learn how data is structured and stored.",
+        lessons: [
+          { id: "gdl1", title: "The Power of Data", duration: "10 min", type: "video", completed: false },
+          { id: "gdl2", title: "Standard Spreadsheets Operations", duration: "25 min", type: "exercise", completed: false }
+        ]
+      }
+    ]
+  },
+  {
+    id: "python-for-everybody",
+    title: "Python for Everybody Specialization",
+    description: "Learn to program and analyze data with Python. Develop programs to clean, analyze, and visualize data.",
+    category: "Core CS",
+    level: "Beginner",
+    duration: "10h 15m",
+    type: "Specialization",
+    badge: "Popular",
+    partner: {
+      name: "University of Michigan",
+      logo: "M",
+      logoBg: "bg-blue-600"
+    },
+    instructor: {
+      name: "Dr. Evelyn Vance",
+      role: "UMich Adjunct Professor",
+      avatar: "UM"
+    },
+    modules: [
+      {
+        id: "py1",
+        title: "Python Basics",
+        description: "Understand variables, types, and mathematical operations.",
+        lessons: [
+          { id: "pyl1", title: "Installing Python & Text Editors", duration: "15 min", type: "video", completed: false },
+          { id: "pyl2", title: "Variables, Expressions, and Statements", duration: "20 min", type: "article", completed: false }
+        ]
+      }
+    ]
+  },
+  {
+    id: "programming-for-everybody",
+    title: "Programming for Everybody (Getting Started with Python)",
+    description: "This course teaches the basics of programming computers using Python, covering fundamental variables and loops.",
+    category: "Core CS",
+    level: "Beginner",
+    duration: "6h 20m",
+    type: "Course",
+    badge: "Bestseller",
+    partner: {
+      name: "University of Michigan",
+      logo: "M",
+      logoBg: "bg-blue-600"
+    },
+    instructor: {
+      name: "Alex Mercer",
+      role: "UMich Course Instructor",
+      avatar: "UM"
+    },
+    modules: [
+      {
+        id: "pye1",
+        title: "Getting Started with Code",
+        description: "Learn how to write your first Python statements.",
+        lessons: [
+          { id: "pyel1", title: "Why Program?", duration: "20 min", type: "video", completed: false },
+          { id: "pyel2", title: "Writing Hello World", duration: "10 min", type: "exercise", completed: false }
         ]
       }
     ]

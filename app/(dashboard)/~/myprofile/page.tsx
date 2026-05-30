@@ -4,12 +4,22 @@ import { redirect } from "next/navigation"
 import { CandidateProfileClient } from "./CandidateProfileClient"
 import { InstituteProfileClient } from "./InstituteProfileClient"
 import { RecruiterProfileClient } from "./RecruiterProfileClient"
+import { AdminProfileClient } from "./AdminProfileClient"
 
 export default async function MyProfilePage() {
   const profile = await getUserProfile()
   if (!profile) return null
 
   const supabase = await createClient()
+
+  if (profile.account_type === "admin") {
+    return (
+      <AdminProfileClient
+        userProfile={profile}
+        initialData={null}
+      />
+    )
+  }
 
   if (profile.account_type === "candidate") {
     const { data: candidateProfile } = await (supabase as any)
@@ -58,3 +68,4 @@ export default async function MyProfilePage() {
 
   redirect("/~/home")
 }
+

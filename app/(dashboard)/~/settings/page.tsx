@@ -4,12 +4,22 @@ import { redirect } from "next/navigation"
 import { CandidateSettingsClient } from "./CandidateSettingsClient"
 import { InstituteSettingsClient } from "./InstituteSettingsClient"
 import { RecruiterSettingsClient } from "./RecruiterSettingsClient"
+import { AdminSettingsClient } from "./AdminSettingsClient"
 
 export default async function SettingsPage() {
   const profile = await getUserProfile()
   if (!profile) return null
 
   const supabase = await createClient()
+
+  if (profile.account_type === "admin") {
+    return (
+      <AdminSettingsClient
+        userProfile={profile}
+        initialData={null}
+      />
+    )
+  }
 
   if (profile.account_type === "candidate") {
     const { data: candidateProfile } = await (supabase as any)
@@ -58,3 +68,4 @@ export default async function SettingsPage() {
 
   redirect("/~/home")
 }
+

@@ -129,12 +129,37 @@ export function CandidateModuleClient({
       const saved = localStorage.getItem("placetrix_courses_progress")
       if (saved) {
         try {
-          setCourses(JSON.parse(saved))
+          const parsed = JSON.parse(saved) as Course[]
+          // Merge parsed progress into INITIAL_COURSES template to migrate format/fields
+          const merged = INITIAL_COURSES.map(templateCourse => {
+            const savedCourse = parsed.find(c => c.id === templateCourse.id)
+            if (!savedCourse) return templateCourse
+            return {
+              ...templateCourse,
+              modules: templateCourse.modules.map(templateMod => {
+                const savedMod = savedCourse.modules?.find(m => m.id === templateMod.id)
+                if (!savedMod) return templateMod
+                return {
+                  ...templateMod,
+                  lessons: templateMod.lessons.map(templateLesson => {
+                    const savedLesson = savedMod.lessons?.find(l => l.id === templateLesson.id)
+                    return {
+                      ...templateLesson,
+                      completed: savedLesson ? savedLesson.completed : templateLesson.completed
+                    }
+                  })
+                }
+              })
+            }
+          })
+          setCourses(merged)
+          localStorage.setItem("placetrix_courses_progress", JSON.stringify(merged))
         } catch (e) {
           console.error("Failed to parse courses progress:", e)
         }
       } else {
         setCourses(INITIAL_COURSES)
+        localStorage.setItem("placetrix_courses_progress", JSON.stringify(INITIAL_COURSES))
       }
     }
   }, [])

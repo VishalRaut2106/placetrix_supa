@@ -1,6 +1,7 @@
 import { getTicketAction } from "../../actions";
 import TicketChatClient from "./TicketChatClient";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { getUserProfile } from "@/lib/supabase/profile";
 
 export default async function TicketPage(props: { params: Promise<{ ticketId: string }> }) {
   const params = await props.params;
@@ -11,8 +12,14 @@ export default async function TicketPage(props: { params: Promise<{ ticketId: st
     return notFound();
   }
 
+  const profile = await getUserProfile();
+  if (profile?.account_type === "admin") {
+    redirect(`/~/support/${params.ticketId}`);
+  }
+
   const data = await getTicketAction(params.ticketId);
   if (!data) return notFound();
 
   return <TicketChatClient initialTicket={data.ticket} initialMessages={data.messages} />;
 }
+

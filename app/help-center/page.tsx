@@ -21,14 +21,15 @@ import { cn } from "@/lib/utils";
 import PlaceTrixLogo from "@/assets/placetrix.svg";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { createTicketAction, validateTicketAction } from "./actions";
+import { createTicketAction, validateTicketAction, getMyTicketsAction } from "./actions";
 import type { UserProfile } from "@/lib/supabase/profile";
 import { getUserProfileAction } from "@/lib/supabase/profile";
 import { buildStorageUrl } from "@/lib/storage";
@@ -233,7 +234,7 @@ function HeaderVisual({ user, isLoading }: { user: UserProfile | null; isLoading
   );
 }
 
-function HeaderShell({ initialUser = null }: { initialUser?: UserProfile | null }) {
+export function HeaderShell({ initialUser = null }: { initialUser?: UserProfile | null }) {
   const [user, setUser] = React.useState<UserProfile | null>(initialUser);
   const [isFetching, setIsFetching] = React.useState(false);
   const mounted = useMounted();
@@ -281,12 +282,33 @@ function TicketFormsSection() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isTrackSubmitting, setIsTrackSubmitting] = React.useState(false);
-  const [userEmail, setUserEmail] = React.useState("");
+  const [userProfile, setUserProfile] = React.useState<UserProfile | null>(null);
+  const [myTickets, setMyTickets] = React.useState<any[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [category, setCategory] = React.useState("General Inquiry");
 
   React.useEffect(() => {
-    getUserProfileAction().then((data) => {
-      if (data?.email) setUserEmail(data.email);
-    }).catch(() => {});
+    let mounted = true;
+    async function loadData() {
+      try {
+        const data = await getUserProfileAction();
+        if (data && mounted) {
+          if (data.account_type === "admin") {
+            router.push("/~/support");
+            return;
+          }
+          setUserProfile(data);
+          const tickets = await getMyTicketsAction();
+          if (mounted) setMyTickets(tickets || []);
+        }
+      } catch (err) {
+        // Not logged in or error
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    }
+    loadData();
+    return () => { mounted = false; };
   }, []);
 
   async function handleCreateTicket(e: React.FormEvent<HTMLFormElement>) {
@@ -297,8 +319,10 @@ function TicketFormsSection() {
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
 
+    const fullTitle = `[${category}] ${title}`;
+
     try {
-      const ticket = await createTicketAction({ email, title, description });
+      const ticket = await createTicketAction({ email, title: fullTitle, description });
       toast.success("Ticket created successfully!");
       router.push(`/help-center/ticket/${ticket.id}`);
     } catch (err: any) {
@@ -313,13 +337,13 @@ function TicketFormsSection() {
     setIsTrackSubmitting(true);
     const formData = new FormData(e.currentTarget);
     const ticketId = formData.get("ticketId") as string;
-    
+
     if (ticketId) {
       try {
         const uuid = await validateTicketAction(ticketId);
         router.push(`/help-center/ticket/${uuid}`);
       } catch (err: any) {
-        toast.error(err.message || "Invalid ticket ID.");
+        toast.error(err.message || "Invalid ticket ID or access denied.");
       } finally {
         setIsTrackSubmitting(false);
       }
@@ -328,91 +352,163 @@ function TicketFormsSection() {
     }
   }
 
+  function getStatusColor(status: string) {
+    switch (status) {
+      case "open": return "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400";
+      case "in_progress": return "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400";
+      case "resolved": return "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400";
+      case "closed": return "bg-zinc-100 text-zinc-700 dark:bg-zinc-500/20 dark:text-zinc-400";
+      default: return "bg-zinc-100 text-zinc-700 dark:bg-zinc-500/20 dark:text-zinc-400";
+    }
+  }
+
   return (
     <section className={cn("bg-white text-zinc-950 dark:bg-black dark:text-white", SECTION_Y)}>
       <div className={CONTENT}>
         <div className="mx-auto w-full">
-          <Tabs defaultValue="create" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-zinc-100 dark:bg-zinc-900 rounded-xl p-1 mb-8">
-              <TabsTrigger value="create" className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800">Create Ticket</TabsTrigger>
-              <TabsTrigger value="track" className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800">Track Ticket</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="create">
-              <Card className="border border-black/10 bg-white/95 dark:border-white/10 dark:bg-white/[0.03] shadow-lg">
-                <CardHeader>
-                  <CardTitle className="text-xl md:text-2xl">Submit a new request</CardTitle>
-                  <CardDescription className="text-sm">
+          {isLoading ? (
+            <div className="flex h-40 items-center justify-center">
+              <div className="size-8 animate-spin rounded-full border-4 border-zinc-200 border-t-zinc-900 dark:border-zinc-800 dark:border-t-white" />
+            </div>
+          ) : !userProfile ? (
+            <Card className="mx-auto w-full max-w-6xl border border-black/10 bg-white/95 dark:border-white/10 dark:bg-white/[0.03] shadow-lg shadow-zinc-200/20 dark:shadow-black/40 py-10 md:py-16 rounded-3xl backdrop-blur-sm">
+              <CardHeader className="text-center space-y-2">
+                <CardTitle className="font-cirka text-2xl md:text-3xl tracking-tight">Sign In Required</CardTitle>
+                <CardDescription className="text-sm md:text-base text-zinc-500 dark:text-zinc-400">
+                  You must be logged in to create or view support tickets.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center gap-6">
+                <div className="flex w-full max-w-sm flex-col gap-3 sm:flex-row sm:justify-center">
+                  <Button variant="outline" className={cn("w-full sm:w-auto", NAV_BUTTON)} asChild>
+                    <Link href="/auth/login?next=/help-center">Sign In</Link>
+                  </Button>
+                  <Button className="w-full sm:w-auto" asChild>
+                    <Link href="/auth/sign-up?next=/help-center">Create Account</Link>
+                  </Button>
+                </div>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2 text-center max-w-xs mx-auto">
+                  Having trouble signing in?<br className="sm:hidden" /> Email us directly at <a href="mailto:360viewtech@gmail.com" className="font-medium underline hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">360viewtech@gmail.com</a>
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <article className="w-full rounded-3xl border border-black/10 bg-white/95 p-6 backdrop-blur-sm dark:border-white/10 dark:bg-white/[0.03] md:p-8 lg:p-10">
+              <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between mb-10">
+                <div>
+                  <h2 className="font-cirka text-balance text-2xl font-semibold tracking-tight md:text-3xl">Submit a new request</h2>
+                  <p className="mt-2 text-sm text-stone-600 dark:text-stone-300">
                     Fill out the form below and we will get back to you as soon as possible.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleCreateTicket} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        placeholder="you@example.com"
-                        defaultValue={userEmail}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="title">Issue Title</Label>
-                      <Input
-                        id="title"
-                        name="title"
-                        placeholder="Brief summary of the issue"
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="description">Description</Label>
-                      <Textarea
-                        id="description"
-                        name="description"
-                        placeholder="Please describe your issue in detail..."
-                        className="min-h-[120px]"
-                        required
-                      />
-                    </div>
-                    <Button type="submit" className="w-full font-medium" disabled={isSubmitting}>
-                      {isSubmitting ? "Submitting..." : "Submit Ticket"}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </TabsContent>
+                  </p>
+                </div>
 
-            <TabsContent value="track">
-              <Card className="border border-black/10 bg-white/95 dark:border-white/10 dark:bg-white/[0.03] shadow-lg">
-                <CardHeader>
-                  <CardTitle className="text-xl md:text-2xl">Track an existing ticket</CardTitle>
-                  <CardDescription className="text-sm">
-                    Enter your secure Ticket ID (UUID) to view and reply to your ticket.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleTrackTicket} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="ticketId">Ticket ID</Label>
-                      <Input
-                        id="ticketId"
-                        name="ticketId"
-                        placeholder="e.g. 123e4567-e89b-12d3-a456-426614174000"
-                        required
-                      />
-                    </div>
-                    <Button type="submit" className="w-full font-medium" disabled={isTrackSubmitting}>
-                      {isTrackSubmitting ? "Searching..." : "Track Ticket"}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="shadow-sm bg-white/50 dark:bg-black/50 backdrop-blur-md shrink-0 border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+                      My Tickets
                     </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-4 md:p-6 overflow-hidden">
+                    <DialogHeader className="shrink-0">
+                      <DialogTitle>My Support Tickets</DialogTitle>
+                      <DialogDescription>
+                        View and manage your open support requests.
+                      </DialogDescription>
+                    </DialogHeader>
+                    {myTickets.length === 0 ? (
+                      <div className="text-center py-8 text-zinc-500 dark:text-zinc-400 shrink-0">
+                        <p>You have no support tickets.</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3 mt-4 overflow-y-auto flex-1 pr-1 -mr-1 md:pr-2 md:-mr-2">
+                        {myTickets.map((ticket) => (
+                          <Link
+                            key={ticket.id}
+                            href={`/help-center/ticket/${ticket.id}`}
+                            className="flex items-center justify-between p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors group"
+                          >
+                            <div className="min-w-0 flex-1">
+                              <p className="font-medium text-sm text-zinc-900 dark:text-white truncate">
+                                {ticket.title}
+                              </p>
+                              <div className="flex items-center gap-2 mt-1">
+                                <p className="text-xs text-zinc-500">#{ticket.ticket_number}</p>
+                                <span className="text-xs text-zinc-300 dark:text-zinc-700">&bull;</span>
+                                <p className="text-xs text-zinc-500">
+                                  {new Date(ticket.created_at).toLocaleDateString()}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3 shrink-0 ml-4">
+                              <div className={cn("rounded-full px-2.5 py-0.5 text-[10px] font-medium capitalize", getStatusColor(ticket.status))}>
+                                {ticket.status.replace("_", " ")}
+                              </div>
+                              <ArrowRightIcon className="size-4 text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors" />
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </DialogContent>
+                </Dialog>
+              </div>
+
+              <div>
+                <form onSubmit={handleCreateTicket} className="space-y-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      defaultValue={userProfile.email}
+                      readOnly
+                      className="bg-zinc-50 dark:bg-zinc-900/50 cursor-not-allowed"
+                    />
+                    <p className="text-[10px] text-zinc-500">Using your account email.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Category</Label>
+                    <Select value={category} onValueChange={setCategory}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Bug Report">Bug Report</SelectItem>
+                        <SelectItem value="Feature Request">Feature Request</SelectItem>
+                        <SelectItem value="Account Issue">Account Issue</SelectItem>
+                        <SelectItem value="Billing">Billing</SelectItem>
+                        <SelectItem value="General Inquiry">General Inquiry</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="title">Issue Title</Label>
+                    <Input
+                      id="title"
+                      name="title"
+                      placeholder="Brief summary of the issue"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea
+                      id="description"
+                      name="description"
+                      placeholder="Please describe your issue in detail..."
+                      className="min-h-[140px]"
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full font-medium mt-2" disabled={isSubmitting}>
+                    {isSubmitting ? "Submitting..." : "Submit Ticket"}
+                  </Button>
+                </form>
+              </div>
+            </article>
+          )}
         </div>
       </div>
     </section>
@@ -478,7 +574,7 @@ const socialLinks = [
   { icon: <GithubIcon />, link: "https://github.com/360viewtech" },
 ];
 
-function Footer() {
+export function Footer() {
   return (
     <footer className="relative">
       <div className="mx-auto max-w-6xl">

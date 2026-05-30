@@ -94,6 +94,7 @@ const NAV_MAIN: Record<AccountType, NavItem[]> = {
     { title: "LogicLab", url: "/~/logiclab/admin", icon: IconCode, badge: "Beta" },
     { title: "Events", url: "/~/events", icon: IconCalendarEvent },
     { title: "Analytics", url: "/~/analytics", icon: IconFileAnalytics },
+    { title: "Support Queue", url: "/~/support", icon: IconHelp },
   ],
   recruiter: [
     { title: "Home", url: "/~/home", icon: IconHome },
@@ -479,6 +480,13 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
   const mainNav = user ? NAV_MAIN[accountType] : null
   const { hoverProps } = useSidebarHoverContext()
 
+  const secondaryNav = React.useMemo(() => {
+    if (user?.account_type === "admin") {
+      return NAV_SECONDARY.filter((item) => item.title !== "Get Help");
+    }
+    return NAV_SECONDARY;
+  }, [user]);
+
   return (
     <Sidebar
       collapsible="icon"
@@ -529,7 +537,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         )}
 
         {user ? (
-          <NavSecondary items={NAV_SECONDARY} className="mt-auto" />
+          <NavSecondary items={secondaryNav} className="mt-auto" />
         ) : (
           <SidebarGroup className="mt-auto">
             <SidebarGroupContent>
